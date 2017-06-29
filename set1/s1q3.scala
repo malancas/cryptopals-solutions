@@ -19,8 +19,21 @@ import s1q2._
 
 def scorePlainText(plainText: Array[String]): Decimal
 
-def convertHexStringToPlainText(hexStr: String, key: Int): String = {
-  hexStr.split("(?<=\\G..)").map(Integer.parseInt(_, 16)).map(_ ^ key)
+def convertDecimalDigitToAsciiCharacter(digit: Int): Char = {
+  // Return the ascii character equivalent of each integer
+  digit match {
+    case (0 <= digit && digit <= 15) => (digit + 65).asChar
+    case (16 <= digit && digit <= 51) => (digit + 81).asChar
+    case (_) => (digit - 4).asChar
+  }
+}
+
+def convertHexStringToPlainTextArray(hexStr: String, key: Int): Array[String] = {
+  hexStr
+    .split("(?<=\\G..)")
+    .map(Integer.parseInt(_, 16))
+    .map(_ ^ key)
+    .map(convertDecimalDigitToAsciiCharacter(_))
 }
 
 def decodeHexString(hexStr: String): String = {
@@ -29,11 +42,7 @@ def decodeHexString(hexStr: String): String = {
 
   // XOR it with each possible character from ascii table
   for (i <- 32 to 126) {
-    // Get the ascii character that alligns with the given integer
-    var charac = i.toChar
-    var xored = decimalNum ^ i
-
-    var xored-plaintext = convertHexToPlainText(convertDecimalToHex())
-    var score = scorePlainText()
+    var plainText = convertHexStringToPlainTextArray(hexStr, i)
+    var score = scorePlainText(plainText)
   }
 }
