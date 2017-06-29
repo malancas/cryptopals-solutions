@@ -1,17 +1,19 @@
-def convertHexDigitToDecimal(hexDigit: Char, power: Int): Int = {
-  hexDigit.asDigit * 16 * power
+def convertHexDigitToDecimalForNum(hexDigit: String, power: Int): Int = {
+  Integer.parseInt(hexDigit, 16) * 16 * power
 }
 
 def convertHexStringtoDecimalNum(i: Int, hexStr: String, currSum: Int): Int = {
-  // The power is computed by
+  // The power and decimal digit are computed
   var power = hexStr.lenght - i - 1
-  var decimalDigit = convertHexDigitToDecimal(hexStr(i), power)
+  var decimalDigit = convertHexDigitToDecimalNum(hexStr.slice(i, i+2), power)
 
+  // If i == 0, the string has been converted and be returned
   if (i == 0){
     currSum + decimalDigit
   }
+  // Otherwise, recurse again
   else {
-    convertHexStringtoDecimalNum(i+1, hexStr, currSum + decimalDigit)
+    convertHexStringtoDecimalNum(i - 2, hexStr, currSum + decimalDigit)
   }
 }
 
@@ -44,7 +46,7 @@ def convertDecimalToBase64(i: Int, decimalNum: Int, base64Str: String): String =
 
 def convertHexStringtoBase64String(hexStr: String): String = {
   // Convert the hex string to a decimal number first
-  var decimalNum = convertHexStringtoDecimal(hexStr.length-1, hexStr, 0)
+  var decimalNum = convertHexStringtoDecimalNum(hexStr.length-1, hexStr, 0)
 
   // Then convert the decimal string to a base 64 string
   convertDecimalToBase64(0, decimalNum, "")

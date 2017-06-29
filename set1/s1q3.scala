@@ -5,21 +5,22 @@ has been XOR'd against a single character. Find the key, decrypt the message.
 You can do this by hand. But don't: write code to do it for you.
 How? Devise some method for "scoring" a piece of English plaintext. Character
  frequency is a good metric. Evaluate each output and choose the one with the best score.
+
+ Step 1: Convert hex string to decimal
+ Step 1.1: Break up string into Array of hex characters
+ Step 1.2: Convert each hex character in decimal and xor it with a potential key
+ Step 1.3: Convert each character to its ascii character equivalent
+ Step 2: Score the plain text array (letter frequency)
+ Step 3: compare the scores of each plain text and choose the best scoring one
 */
 
-// Step 1: Convert hex string to decimal
-// Step 2: xor it with each possible character
-// Step 2.1: Convert it back to hex
-// Step 2.2: Get the ascii values (should result in plain text)
-// Step 2.3: Score the plain text
-// Step 3: compare the scores of each plain text and choose the best scoring one
 import s1q1._
 import s1q2._
 
-def scorePlainText(plainText: String): Decimal
+def scorePlainText(plainText: Array[String]): Decimal
 
-def convertHexToPlainText(hexStr: String): String = {
-  
+def convertHexStringToPlainText(hexStr: String, key: Int): String = {
+  hexStr.split("(?<=\\G..)").map(Integer.parseInt(_, 16)).map(_ ^ key)
 }
 
 def decodeHexString(hexStr: String): String = {
