@@ -7,8 +7,8 @@ class C11 {
 
   def convertHexStringtoDecimalNum(i: Int, hexStr: String, currSum: Int): Int = {
     // The power and decimal digit are computed
-    val power = hexStr.lenght - i - 1
-    val decimalDigit = convertHexDigitToDecimalNum(hexStr.slice(i, i+2), power)
+    val power = hexStr.length - i - 1
+    val decimalDigit = convertHexDigitToDecimalForNum(hexStr.slice(i, i+2), power)
 
     // If i == 0, the string has been converted and be returned
     if (i == 0){

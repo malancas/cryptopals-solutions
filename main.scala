@@ -1,4 +1,4 @@
-import set1/c11.C11
+import c11.C11
 
 object MainModel {
   def main(args: Array[String]): Unit = {
@@ -11,6 +11,7 @@ object MainModel {
     val actualResult = convertHexStringtoBase64String(sampleInput)
     assert(expectedResult == actualResult)
 
+    /*
     // Question 2
     val sampleBuffer0 = "1c0111001f010100061a024b53535009181c"
     val sampleBuffer1 = "686974207468652062756c6c277320657965"
@@ -24,5 +25,6 @@ object MainModel {
     63c78373e783a393b3736"
 
     actualResult = decodeHexString(samppleHexString)
+    */
   }
 }
