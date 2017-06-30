@@ -23,13 +23,13 @@ class C11 {
   def convertDecimalDigitToBase64Digit(digit: Int): Char = {
     // Return the ascii character equivalent of each integer
     if (0 <= digit && digit <= 15) {
-      (digit + 65).asChar
+      (digit + 65).toChar
     }
     else if (16 <= digit && digit <= 51) {
-      (digit + 81).asChar
+      (digit + 81).toChar
     }
     else {
-      (digit - 4).asChar
+      (digit - 4).toChar
     }
   }
 

@@ -4,11 +4,12 @@ object MainModel {
   def main(args: Array[String]): Unit = {
     // Set 1
     // Question 1
+    var c = new C11
     val sampleInput = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
 
     val expectedResult = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
 
-    val actualResult = convertHexStringtoBase64String(sampleInput)
+    val actualResult = c.convertHexStringtoBase64String(sampleInput)
     assert(expectedResult == actualResult)
 
     /*
