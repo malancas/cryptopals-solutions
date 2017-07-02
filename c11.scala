@@ -80,11 +80,8 @@ class C11 {
     else if (digit == 62) {
       '+'
     }
-    else if (digit == 63) {
-      '/'
-    }
     else {
-      '?'
+      '/'
     }
   }
 
@@ -93,26 +90,16 @@ class C11 {
   }
 
   def convertHexStringtoBase64String(hexStr: String): String = {
-    // Convert the hex string to an array of individual hex characters
-    val hexArray = hexStr.split("(?<=\\G..)")
+    val binaryStr = "0" + BigInt(hexStr, 16).toString(2)
+    val bArray = binaryStr.split("(?<=\\G......)")
+    //println(s"barray: $binaryStr")
+    //println(s"binary String: $fullBinaryString")
+    val newBinaryString = bArray.mkString(" ")
+    println(s"nbs: $newBinaryString")
 
-    // Convert the hex array to a plain text array
-    val plainTextArray = hexArray.map(Integer.parseInt(_, 16)).map(_.toChar)
-
-    // Convert the hex array to a decimal array
-    val decimalArray = hexArray.map(Integer.parseInt(_, 16))
-
-    // Convert decimal array to a binary string
-    val fullBinaryString = decimalArray.map(_.toBinaryString).mkString("")
-
-    // Every six bits is a base 64 digit, so the binary string must be split
-    // every six characters
-    val binaryArray = fullBinaryString.split("(?<=\\G......)")
-
-    // Convert the binary array to a base 64 digit array
-    val base64Array = binaryArray.map(Integer.parseInt(_, 2)).map(convertDecimalDigitToBase64Digit(_))
+    val base64Array2 = bArray.map(Integer.parseInt(_, 2)).map(convertDecimalDigitToBase64Digit(_))
 
     // Convert the base 64 array into a string and return it
-    base64Array.mkString("")
+    base64Array2.mkString("")
   }
 }
