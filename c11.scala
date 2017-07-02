@@ -26,6 +26,10 @@ class C11 {
     "0" + BigInt(hexStr, 16).toString(2)
   }
 
+  def convertBinaryArrayToBase64Array(binaryArray: Array[String]): Array[Char] = {
+    binaryArray.map(Integer.parseInt(_, 2)).map(convertDecimalDigitToBase64Digit(_))
+  }
+
   def convertHexStringtoBase64String(hexStr: String): String = {
     // Convert the hex string to a binary string and add a 0 to the beginning
     val binaryStr = convertHexStringToBinaryString(hexStr)
@@ -34,7 +38,7 @@ class C11 {
     val binaryArray = binaryStr.split("(?<=\\G......)")
 
     // Convert each binary number element of the binary array into its base 64 equivalent
-    val base64Array = binaryArray.map(Integer.parseInt(_, 2)).map(convertDecimalDigitToBase64Digit(_))
+    val base64Array = convertBinaryArrayToBase64Array(binaryArray)
 
     // Convert the base 64 array into a string and return it
     base64Array.mkString("")
