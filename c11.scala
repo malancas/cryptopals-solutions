@@ -20,9 +20,15 @@ class C11 {
     }
   }
 
+  def convertHexStringToBinaryString(hexStr: String): String = {
+    // Use BigInt to handle the long string. Need to add a 0 to the beginning
+    // of the string for proper conversion
+    "0" + BigInt(hexStr, 16).toString(2)
+  }
+
   def convertHexStringtoBase64String(hexStr: String): String = {
     // Convert the hex string to a binary string and add a 0 to the beginning
-    val binaryStr = "0" + BigInt(hexStr, 16).toString(2)
+    val binaryStr = convertHexStringToBinaryString(hexStr)
 
     // Convert the binary string into an array of binary numbers by splitting on every sixth digit
     val binaryArray = binaryStr.split("(?<=\\G......)")
