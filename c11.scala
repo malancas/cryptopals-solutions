@@ -24,9 +24,10 @@ class C11 {
     // Convert the hex string to a binary string and add a 0 to the beginning
     val binaryStr = "0" + BigInt(hexStr, 16).toString(2)
 
-    // Convert it into an array of binary numbers by splitting on every sixth digit
+    // Convert the binary string into an array of binary numbers by splitting on every sixth digit
     val binaryArray = binaryStr.split("(?<=\\G......)")
 
+    // Convert each binary number element of the binary array into its base 64 equivalent
     val base64Array = binaryArray.map(Integer.parseInt(_, 2)).map(convertDecimalDigitToBase64Digit(_))
 
     // Convert the base 64 array into a string and return it

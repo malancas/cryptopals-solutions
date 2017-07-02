@@ -12,6 +12,7 @@ object MainModel {
     val actualResult = c.convertHexStringtoBase64String(sampleInput)
     println(s"Actual result: $actualResult")
     println(s"Expected result: $expectedResult")
+    assert(actualResult == expectedResult)
 
     /*
     // Question 2
