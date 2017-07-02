@@ -18,6 +18,12 @@ class C13 {
     // Make all letters lowercase for easier letter frequency analysis
     val loweredCase = plainText.toLowerCase()
     val frequencyHash = plainText.mkString.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
+
+    var diffScore = 0
+    for (i <- 97 to 122) {
+      diffScore += math.abs(frequencyHash(i.toChar) - referenceHash(i.toChar))
+    }
+    diffScore
   }
 
   def convertDecimalArrayToPlainText(decimalArray: Array[Int]): String = {
@@ -28,15 +34,21 @@ class C13 {
 
   def findBestKey(decimalArray: Array[Int]): Char = {
     var bestScore = 0
+    var bestKey = 'a'
 
     for (i <- 32 to 126) {
       // XOR with the decimal i
       val xored = decimalArray.map(_ ^ i)
       val plainText = convertDecimalArrayToPlainText(xored)
       val currScore = scorePlainText(plainText)
+
+      if (currScore < bestScore){
+        bestScore = currScore
+        bestKey = i
+      }
     }
 
-    'o'
+    bestKey
   }
 
   def getTheBestKey(hexStr: String): Char = {
