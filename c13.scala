@@ -15,30 +15,39 @@ How? Devise some method for "scoring" a piece of English plaintext. Character
 */
 package c13
 
+import c12.C12
+
 class C13 {
-  def scorePlainText(plainText: Array[String]): Decimal
-
-  def convertDecimalDigitToAsciiCharacter(digit: Int): Char = {
-    // Return the ascii character equivalent of each integer
-    digit.asChar
+  def scorePlainText(plainText: String): Int = {
+    8
   }
 
-  def convertHexStringToPlainTextArray(hexStr: String, key: Int): Array[String] = {
-    hexStr
-      .split("(?<=\\G..)")
-      .map(Integer.parseInt(_, 16))
-      .map(_ ^ key)
-      .map(convertDecimalDigitToAsciiCharacter(_))
+  def convertDecimalArrayToPlainText(decimalArray: Array[Int]): String = {
+    decimalArray
+      .map(_.toChar)
+      .mkString("")
   }
 
-  def decodeHexString(hexStr: String): String = {
-    // Conver the hex string to decimalDigit
-    val decimalNum = convertHexStringtoDecimalNum(0, hexStr, 0)
+  def findBestKey(decimalArray: Array[Int]): Char = {
+    var bestScore = 0
 
-    // XOR it with each possible character from ascii table
     for (i <- 32 to 126) {
-      val plainText = convertHexStringToPlainTextArray(hexStr, i)
-      val score = scorePlainText(plainText)
+      // XOR with the decimal i
+      val xored = decimalArray.map(_ ^ i)
+      val plainText = convertDecimalArrayToPlainText(xored)
+      val currScore = scorePlainText(plainText)
     }
+
+    'o'
+  }
+
+  def getTheBestKey(hexStr: String): Char = {
+    // Get the an array containing the decimal conversions of each hex digit
+    val c = new C12
+    val decimalArray = c.convertHexArrayToDecimalArray(hexStr.split("(?<=\\G..)"))
+
+    // Try xoring with each possible character and score the plaint text
+    val bestKey = findBestKey(decimalArray)
+    bestKey
   }
 }

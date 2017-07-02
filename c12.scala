@@ -1,9 +1,6 @@
 // Write a function that takes two equal-length
 // buffers and produces the hex representation of their XOR combination
-
 package c12
-
-import c11.C11
 
 class C12 {
   def convertHexArrayToDecimalArray(hexArr: Array[String]): Array[Int] = {
