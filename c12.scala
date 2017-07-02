@@ -6,7 +6,10 @@
 // Step three: Encode the result to hex
 package c12
 
+import c11.C11
+
 class C12 {
+  /*
   def convertDecimalDigitToHexDigit(decimalDigit: Int): String = {
     val charDigit = (decimalDigit + 48).toChar
 
@@ -40,5 +43,21 @@ class C12 {
 
     // Convert the result to hex
     convertDecimaltoHex(xored, "")
+  }
+   */
+
+  def convertHexArrayToDecimalArray(hexArr: Array[String]): Array[Int] = {
+    hexArr.map(Integer.parseInt(_, 16))
+  }
+
+  def getFixedXORofHexBuffers(buffer0: String, buffer1: String): String = {
+    val decimalBuffer0 = convertHexArrayToDecimalArray(buffer0.split("(?<=\\G..)"))
+    val decimalBuffer1 = convertHexArrayToDecimalArray(buffer1.split("(?<=\\G..)"))
+
+    val xoredDecimalArray = decimalBuffer0.zip(decimalBuffer1).map { case (x, y) => x ^ y }
+
+    val hexArray = xoredDecimalArray.map("%x".format(_))
+
+    hexArray.mkString("")
   }
 }
