@@ -85,21 +85,16 @@ class C11 {
     }
   }
 
-  def convertHexStringToDecimal(hexList: Array[String]): Array[Int] = {
-    hexList.map(Integer.parseInt(_, 16))
-  }
-
   def convertHexStringtoBase64String(hexStr: String): String = {
+    // Convert the hex string to a binary string and add a 0 to the beginning
     val binaryStr = "0" + BigInt(hexStr, 16).toString(2)
-    val bArray = binaryStr.split("(?<=\\G......)")
-    //println(s"barray: $binaryStr")
-    //println(s"binary String: $fullBinaryString")
-    val newBinaryString = bArray.mkString(" ")
-    println(s"nbs: $newBinaryString")
 
-    val base64Array2 = bArray.map(Integer.parseInt(_, 2)).map(convertDecimalDigitToBase64Digit(_))
+    // Convert it into an array of binary numbers by splitting on every sixth digit
+    val binaryArray = binaryStr.split("(?<=\\G......)")
+
+    val base64Array = binaryArray.map(Integer.parseInt(_, 2)).map(convertDecimalDigitToBase64Digit(_))
 
     // Convert the base 64 array into a string and return it
-    base64Array2.mkString("")
+    base64Array.mkString("")
   }
 }
