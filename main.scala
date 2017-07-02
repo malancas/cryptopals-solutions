@@ -10,7 +10,8 @@ object MainModel {
     val expectedResult = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
 
     val actualResult = c.convertHexStringtoBase64String(sampleInput)
-    assert(expectedResult == actualResult)
+    println(s"Actual result: $actualResult")
+    println(s"Expected result: $expectedResult")
 
     /*
     // Question 2
@@ -18,14 +19,9 @@ object MainModel {
     val sampleBuffer1 = "686974207468652062756c6c277320657965"
     expectedResult = "746865206b696420646f6e277420706c6179"
 
-    actualResult = getFixedXORofHexBuffers(sampleBuffer0, sampleBuffer1)
-    assert(expectedResult == actualResult)
-
     // Question 3
     val samppleHexString = "1b37373331363f78151b7f2b783431333d78397828372d
     63c78373e783a393b3736"
-
-    actualResult = decodeHexString(samppleHexString)
     */
   }
 }
