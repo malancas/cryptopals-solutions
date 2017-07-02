@@ -19,9 +19,11 @@ import c12.C12
 
 class C13 {
   // Need a referenec hash for English
+  val referenceHash = scala.collection.immutable.Map[Char,Double] = Map('e' -> 12.02, 't' -> 9.10, 'a' -> 8.12, 'o' -> 7.68)
 
   def scorePlainText(plainText: String): Int = {
-    val frequencyHash = plainText.mkString.groupBy(c => c).mapValues(_.length)
+    val loweredCase = plainText.toLowerCase()
+    val frequencyHash = plainText.mkString.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
   }
 
   def convertDecimalArrayToPlainText(decimalArray: Array[Int]): String = {
