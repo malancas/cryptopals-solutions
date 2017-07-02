@@ -18,8 +18,10 @@ package c13
 import c12.C12
 
 class C13 {
+  // Need a referenec hash for English
+
   def scorePlainText(plainText: String): Int = {
-    8
+    val frequencyHash = plainText.mkString.groupBy(c => c).mapValues(_.length)
   }
 
   def convertDecimalArrayToPlainText(decimalArray: Array[Int]): String = {
