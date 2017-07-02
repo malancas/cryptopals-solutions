@@ -5,13 +5,6 @@ has been XOR'd against a single character. Find the key, decrypt the message.
 You can do this by hand. But don't: write code to do it for you.
 How? Devise some method for "scoring" a piece of English plaintext. Character
  frequency is a good metric. Evaluate each output and choose the one with the best score.
-
- Step 1: Convert hex string to decimal
- Step 1.1: Break up string into Array of hex characters
- Step 1.2: Convert each hex character in decimal and xor it with a potential key
- Step 1.3: Convert each character to its ascii character equivalent
- Step 2: Score the plain text array (letter frequency)
- Step 3: compare the scores of each plain text and choose the best scoring one
 */
 package c13
 
@@ -22,6 +15,7 @@ class C13 {
   val referenceHash = scala.collection.immutable.Map[Char,Double] = Map('e' -> 12.02, 't' -> 9.10, 'a' -> 8.12, 'o' -> 7.68, 'i' -> 7.31, 'n' -> 6.95, 's' -> 6.28, 'r' -> 6.02, 'h' -> 5.92, 'd' -> 4.32, 'l' -> 3.89, 'u' -> 2.88, 'c' -> 2.71, 'm' -> 2.61, 'f' -> 2.30, 'y' -> 2.11, 'w' -> 2.09, 'g' -> 2.03, 'p' -> 1.82, 'b' -> 1.49, 'v' -> 1.11, 'k' -> 0.69, 'x' -> 0.17, 'q' -> 0.11, 'j' -> 0.10, 'z' -> 0.07)
 
   def scorePlainText(plainText: String): Int = {
+    // Make all letters lowercase for easier letter frequency analysis
     val loweredCase = plainText.toLowerCase()
     val frequencyHash = plainText.mkString.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
   }
