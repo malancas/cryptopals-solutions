@@ -21,7 +21,7 @@ class C13 {
     // Make all letters lowercase for easier letter frequency analysis
     val loweredCase = plainText.toLowerCase()
 
-    val frequencyHash = plainText.mkString.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
+    val frequencyHash = plainText.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
 
     var diffScore = 0.0
     for (i <- 0 to 256) {
@@ -44,36 +44,28 @@ class C13 {
     for (i <- 0 to 256) {
       // XOR with the decimal i
       val xored = decimalArray.map(_ ^ i).map(_.toChar).mkString("")
-
-      if (xored.contains("Cook")) {
-        println(xored.mkString(""))
-        println(i.toChar)
-      }
-
-      /*
-      val currScore = scorePlainText(plainText)
+      val plaintext = xored.map(_.toChar).mkString("")
+      val currScore = scorePlainText(plaintext)
 
       if (currScore < bestScore){
         bestScore = currScore
         bestKey = i.toChar
-        bestPlainText = plainText
+        bestPlainText = plaintext
       }
-       */
+     
     }
 
     println(bestPlainText)
     bestKey
   }
 
-  def getTheBestKey(hexStr: String): Char = {
+  def breakSingleByteXORCipher(hexStr: String): Char = {
     // Get the an array containing the decimal conversions of each hex digit
     val c = new C12
     val decimalArray = c.convertHexArrayToDecimalArray(hexStr.split("(?<=\\G..)"))
-    //println(decimalArray.map(_.toChar).mkString(" "))
 
     // Try xoring with each possible character and score the plaint text
-    //val bestKey = findBestKey(decimalArray)
-    findBestKey(decimalArray)
-    'm'
+    val bestKey = findBestKey(decimalArray)
+    bestKey
   }
 }
