@@ -36,9 +36,9 @@ class C13 {
       .map(_.toChar)
   }
 
-  def findBestKey(decimalArray: Array[Int], i: Int, bestScore: Double, bestKey: Int): Int = {
+  def findBestKey(decimalArray: Array[Int], i: Int, bestScore: Double, bestKey: Int): (Int, Double) = {
     if (i == 256){
-      bestKey
+      (bestKey, bestScore)
     }
     else {
       // XOR with the decimal i
@@ -61,7 +61,7 @@ class C13 {
     val decimalArray = c.convertHexArrayToDecimalArray(hexStr.split("(?<=\\G..)"))
 
     // Try xoring with each possible character and score the plaint text
-    val bestKey = findBestKey(decimalArray, 0, Double.MaxValue, 0)
+    val (bestKey, bestScore) = findBestKey(decimalArray, 0, Double.MaxValue, 0)
     bestKey
   }
 }

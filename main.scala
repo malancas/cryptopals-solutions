@@ -39,5 +39,6 @@ object MainModel {
 
     // Question 4
     val c4 = new C14
+    c4.detectSingleCharacterXOR()
   }
 }

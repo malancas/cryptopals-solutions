@@ -4,36 +4,45 @@ import scala.io.Source
 import c13.C13
 
 class C14 {
-  def getLinesFromFile(filename: String): Array[String] = {
+  def getLinesFromFile(): List[String] = {
     Source
-      .fromFile(filename)
+      .fromFile("4.txt")
       .getLines
-      .toArray
+      .toList
   }
 
-  def getBestKeyFromLines(lines: Array[String], c: C13, bestLine, bestScore): Unit = {
+  def getBestKeyFromLines(lines: List[String], c: C13, bestLine: String, bestScore: Double): String = {
     // Use breakSIngleByeXORCipher on each line.
     // Use this to get the lowest plain text score
     lines match {
-      case (h,t) => {
-        val lineScore = c.findBestKey(h, 0, Double.MaxValue, 0)
+      case h :: t => {
+        val decimalArray = h.split("(?<=\\G..)").map(Integer.parseInt(_, 16))
+        val (lineKey, lineScore) = c.findBestKey(decimalArray, 0, Double.MaxValue, 0)
+        //println(h.split("(?<=\\G..)").map(Integer.parseInt(_, 16)).map(_ ^ lineKey).map(_.toChar).mkString(""))
+
         if (lineScore < bestScore){
-          getBestKeyFromLines(t, c, h, lineScore)
+          val decoded = h.split("(?<=\\G..)").map(Integer.parseInt(_, 16)).map(_ ^ lineKey).map(_.toChar).mkString("")
+          getBestKeyFromLines(t, c, decoded, lineScore)
         }
         else {
           getBestKeyFromLines(t, c, bestLine, bestScore)
         }
       }
-      case (_) => {
+      case _ => {
         // return the keys here?
+        println(bestScore)
         bestLine
       }
     }
   }
 
-  def detectSingleCharacterXOR(filename: String): String = {
+  def detectSingleCharacterXOR(): String = {
     // Open the file and create an array of the lines
-    val fileLines = getLinesFromFile(filename)
-    "present day, present time"
+    val fileLines = getLinesFromFile()
+    val line = getBestKeyFromLines(fileLines, c = new C13, "", Double.MaxValue)
+    println(s"Line: $line")
+    //line.split("(?<=\\G..)").map(_ ^ i).map(_.toChar).mkString("")
+    line
+    //"present day, present time"
   }
 }
