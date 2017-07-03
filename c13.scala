@@ -31,10 +31,9 @@ class C13 {
     diffScore
   }
 
-  def convertDecimalArrayToPlainText(decimalArray: Array[Int]): String = {
+  def convertDecimalArrayToPlainTextArray(decimalArray: Array[Int]): Array[Char] = {
     decimalArray
       .map(_.toChar)
-      .mkString("")
   }
 
   def findBestKey(decimalArray: Array[Int]): Char = {
@@ -42,13 +41,16 @@ class C13 {
     var bestKey = 'a'
     var bestPlainText = ""
 
-    for (i <- 0 to 127) {
+    for (i <- 0 to 256) {
       // XOR with the decimal i
-      val xored = decimalArray.map(_ ^ i)
-      val plainText = convertDecimalArrayToPlainText(xored)
-      println(plainText)
-      println(i.toChar)
-      
+      val xored = decimalArray.map(_ ^ i).map(_.toChar).mkString("")
+
+      if (xored.contains("Cook")) {
+        println(xored.mkString(""))
+        println(i.toChar)
+      }
+
+      /*
       val currScore = scorePlainText(plainText)
 
       if (currScore < bestScore){
@@ -56,10 +58,11 @@ class C13 {
         bestKey = i.toChar
         bestPlainText = plainText
       }
+       */
     }
 
     println(bestPlainText)
-    bestKey.toChar
+    bestKey
   }
 
   def getTheBestKey(hexStr: String): Char = {
@@ -69,7 +72,8 @@ class C13 {
     //println(decimalArray.map(_.toChar).mkString(" "))
 
     // Try xoring with each possible character and score the plaint text
-    val bestKey = findBestKey(decimalArray)
-    bestKey
+    //val bestKey = findBestKey(decimalArray)
+    findBestKey(decimalArray)
+    'm'
   }
 }

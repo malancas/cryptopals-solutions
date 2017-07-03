@@ -32,7 +32,7 @@ object MainModel {
 
     // Question 3
     val c3 = new C13
-    val sampleHexString = "1b37373331363f78151b7f2b783431333d78397828372d63c78373e783a393b3736"
+    val sampleHexString = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
     val bestKey = c3.getTheBestKey(sampleHexString)
     println(s"Best key: $bestKey")
   }
