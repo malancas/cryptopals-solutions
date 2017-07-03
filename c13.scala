@@ -36,9 +36,9 @@ class C13 {
       .map(_.toChar)
   }
 
-  def findBestKey(decimalArray: Array[Int]): Char = {
-    var bestScore = 0.0
-    var bestKey = 'a'
+  def findBestKey(decimalArray: Array[Int]): Int = {
+    var bestScore = Double.MaxValue
+    var bestKey = 0
     var bestPlainText = ""
 
     for (i <- 0 to 256) {
@@ -49,7 +49,7 @@ class C13 {
 
       if (currScore < bestScore){
         bestScore = currScore
-        bestKey = i.toChar
+        bestKey = i
         bestPlainText = plaintext
       }
      
@@ -59,7 +59,7 @@ class C13 {
     bestKey
   }
 
-  def breakSingleByteXORCipher(hexStr: String): Char = {
+  def breakSingleByteXORCipher(hexStr: String): Int = {
     // Get the an array containing the decimal conversions of each hex digit
     val c = new C12
     val decimalArray = c.convertHexArrayToDecimalArray(hexStr.split("(?<=\\G..)"))
