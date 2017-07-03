@@ -36,6 +36,25 @@ class C13 {
       .map(_.toChar)
   }
 
+  def findBestKey_recurse(decimalArray: Array[Int], i: Int, bestScore: Double, bestKey: Int): Int = {
+    if (i == 256){
+      bestKey
+    }
+    else {
+      // XOR with the decimal i
+      val xored = decimalArray.map(_ ^ i).map(_.toChar).mkString("")
+      val plaintext = xored.map(_.toChar).mkString("")
+      val currScore = scorePlainText(plaintext)
+
+      if (currScore < bestScore){
+        findBestKey_recurse(decimalArray, i+1, currScore, i)
+      }
+      else {
+        findBestKey_recurse(decimalArray, i+1, bestScore, bestKey)
+      }
+    }
+  }
+
   def findBestKey(decimalArray: Array[Int]): Int = {
     var bestScore = Double.MaxValue
     var bestKey = 0
@@ -65,7 +84,7 @@ class C13 {
     val decimalArray = c.convertHexArrayToDecimalArray(hexStr.split("(?<=\\G..)"))
 
     // Try xoring with each possible character and score the plaint text
-    val bestKey = findBestKey(decimalArray)
+    val bestKey = findBestKey_recurse(decimalArray, 0, Double.MaxValue, 0)
     bestKey
   }
 }
