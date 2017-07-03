@@ -1,18 +1,7 @@
-/*
-
-Detect single-character XOR
-
-One of the 60-character strings in this file has been encrypted by single-character XOR.
-
-Find it.
-
-(Your code from #3 should help.)
-
- */
-
 package c14
 
 import scala.io.Source
+import c13.C13
 
 C14 {
   def getLinesFromFile(filename: String): Array[String] = {
@@ -20,6 +9,12 @@ C14 {
       .fromFile(filename)
       .getLines
       .toArray
+  }
+
+  def getBestKeyFromLines(lines: Array[String]) = {
+    c = new C13
+    // Use breakSIngleByeXORCipher on each line.
+    // Use this to get the lowest plain text score
   }
 
   def detectSingleCharacterXOR(filename: String): String = {
