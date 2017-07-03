@@ -1,7 +1,6 @@
 import c11.C11
 import c12.C12
 import c13.C13
-import c14.C14
 
 object MainModel {
   def main(args: Array[String]): Unit = {
@@ -36,8 +35,5 @@ object MainModel {
     val bestKey = c3.breakSingleByteXORCipher(sampleHexString)
     println(s"Best key: $bestKey")
     assert(bestKey == 88)
-
-    // Question 4
-    val c4 = new C14
   }
 }
