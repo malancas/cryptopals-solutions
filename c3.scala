@@ -3,24 +3,29 @@ package c3
 import c2.C2
 
 class C3 {
-  // Sourced from: https://www.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html
-  val referenceHash = Map('e' -> 12.02, 't' -> 9.10, 'a' -> 8.12, 'o' -> 7.68, 'i' -> 7.31, 'n' -> 6.95,
+  // Letter frequencies sourced from: https://www.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html
+  val referenceMap = Map('e' -> 12.02, 't' -> 9.10, 'a' -> 8.12, 'o' -> 7.68, 'i' -> 7.31, 'n' -> 6.95,
     's' -> 6.28, 'r' -> 6.02, 'h' -> 5.92, 'd' -> 4.32, 'l' -> 3.89, 'u' -> 2.88, 'c' -> 2.71, 'm' -> 2.61,
     'f' -> 2.30, 'y' -> 2.11, 'w' -> 2.09, 'g' -> 2.03, 'p' -> 1.82, 'b' -> 1.49, 'v' -> 1.11, 'k' -> 0.69,
     'x' -> 0.17, 'q' -> 0.11, 'j' -> 0.10, 'z' -> 0.07)
+
+  def makePlaintextScore(i: Int, score: Double, frequencyMap: Map[Char, Double]): Double = {
+    if (i == 256) { score }
+    else {
+      val diff = math.abs(frequencyMap.getOrElse(i.toChar, 0.0) - referenceMap.getOrElse(i.toChar, 0.0))
+      makePlaintextScore(i+1, score + diff, frequencyMap)
+    }
+  }
 
   def scorePlainText(plainText: String): Double = {
     // Make all letters lowercase for easier letter frequency analysis
     val loweredCase = plainText.toLowerCase()
 
-    val frequencyHash = plainText.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
+    // Create a map of frequency values by mapping each letter that appears in the plain text string
+    // to the number of times it appears over the length of the string itself
+    val frequencyMap = plainText.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
 
-    var diffScore = 0.0
-    for (i <- 0 to 256) {
-
-      diffScore += math.abs(frequencyHash.getOrElse(i.toChar, 0.0) - referenceHash.getOrElse(i.toChar, 0.0))
-    }
-    diffScore
+    makePlaintextScore(0, 0.0, frequencyMap)
   }
 
   def convertDecimalArrayToPlainTextArray(decimalArray: Array[Int]): Array[Char] = {
