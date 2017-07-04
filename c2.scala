@@ -3,13 +3,15 @@
 package c2
 
 class C2 {
-  def convertHexArrayToDecimalArray(hexArr: Array[String]): Array[Int] = {
-    hexArr.map(Integer.parseInt(_, 16))
+  def convertHexArrayToDecimalArray(hexArray: Array[String]): Array[Int] = {
+    // Convert each hex element to its decimal equivalent
+    hexArray.map(Integer.parseInt(_, 16))
   }
 
-  def getFixedXORofHexBuffers(buffer0: String, buffer1: String): String = {
-    val decimalBuffer0 = convertHexArrayToDecimalArray(buffer0.split("(?<=\\G..)"))
-    val decimalBuffer1 = convertHexArrayToDecimalArray(buffer1.split("(?<=\\G..)"))
+  def getFixedXORofHexBuffers(hexBuffer0: String, hexBuffer1: String): String = {
+    // Convert each hex buffer to an array equivalent 
+    val decimalBuffer0 = convertHexArrayToDecimalArray(hexBuffer0.split("(?<=\\G..)"))
+    val decimalBuffer1 = convertHexArrayToDecimalArray(hexBuffer1.split("(?<=\\G..)"))
 
     val xoredDecimalArray = decimalBuffer0.zip(decimalBuffer1).map { case (x, y) => x ^ y }
 

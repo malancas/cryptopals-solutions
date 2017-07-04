@@ -1,6 +1,14 @@
 package c1
 
 class C1 {
+  def splitStringIntoArray(str: String, n: Int): Array[String] = {
+    // This regex will split after every nth character
+    // in the string. The number of dots signify
+    // how many characters are skipped before splitting
+    val splitRegex = "(?<=\\G" + "." * n + ")"
+    str.split(splitRegex)
+  }
+
   def convertDecimalDigitToBase64Digit(digit: Int): Char = {
     // Return the base 64 equivalent of the decimal digit argument
     if (0 <= digit && digit <= 25) {
@@ -40,7 +48,8 @@ class C1 {
     // Convert the binary string into an array of binary numbers by splitting on every sixth digit
     // Split is done after every sixth digit instead of eigth since base 64 numbers are only made
     // up of six binary values instead of eight like binary or decimal numbers
-    val binaryArray = binaryStr.split("(?<=\\G......)")
+    //val binaryArray = binaryStr.split("(?<=\\G......)")
+    val binaryArray = splitStringIntoArray(binaryStr, 6)
 
     // Convert each binary number element of the binary array into its base 64 equivalent
     val base64Array = convertBinaryArrayToBase64Array(binaryArray)
