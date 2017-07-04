@@ -2,6 +2,8 @@
 // buffers and produces the hex representation of their XOR combination
 package c2
 
+import c1.C1
+
 class C2 {
   def convertHexArrayToDecimalArray(hexArray: Array[String]): Array[Int] = {
     // Convert each hex element to its decimal equivalent
@@ -9,14 +11,22 @@ class C2 {
   }
 
   def getFixedXORofHexBuffers(hexBuffer0: String, hexBuffer1: String): String = {
-    // Convert each hex buffer to an array equivalent 
-    val decimalBuffer0 = convertHexArrayToDecimalArray(hexBuffer0.split("(?<=\\G..)"))
-    val decimalBuffer1 = convertHexArrayToDecimalArray(hexBuffer1.split("(?<=\\G..)"))
+    val c = new C1
+    // Convert each hex string to an array equivalent
+    val hexArray0 = c.splitStringIntoArray(hexBuffer0, 2)
+    val hexArray1 = c.splitStringIntoArray(hexBuffer1, 2)
 
-    val xoredDecimalArray = decimalBuffer0.zip(decimalBuffer1).map { case (x, y) => x ^ y }
+    // Convert each element of the hex array to their decimal equivalents
+    val decimalArray0 = convertHexArrayToDecimalArray(hexArray0)
+    val decimalArray1 = convertHexArrayToDecimalArray(hexArray1)
 
+    // XOR the elements of the decimal arrays together
+    val xoredDecimalArray = decimalArray0.zip(decimalArray1).map { case (x, y) => x ^ y }
+
+    // Convert each element of decimal array to their hex equivalents
     val hexArray = xoredDecimalArray.map("%x".format(_))
 
+    // Make a string from the hex array
     hexArray.mkString("")
   }
 }
