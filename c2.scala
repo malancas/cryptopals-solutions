@@ -1,8 +1,8 @@
 // Write a function that takes two equal-length
 // buffers and produces the hex representation of their XOR combination
-package c12
+package c2
 
-class C12 {
+class C2 {
   def convertHexArrayToDecimalArray(hexArr: Array[String]): Array[Int] = {
     hexArr.map(Integer.parseInt(_, 16))
   }

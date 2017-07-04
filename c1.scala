@@ -1,6 +1,6 @@
-package c11
+package c1
 
-class C11 {
+class C1 {
   def convertDecimalDigitToBase64Digit(digit: Int): Char = {
     // Return the ascii character equivalent of each integer
     if (0 <= digit && digit <= 25) {

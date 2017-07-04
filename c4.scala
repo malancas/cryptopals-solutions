@@ -1,9 +1,9 @@
-package c14
+package c4
 
 import scala.io.Source
-import c13.C13
+import c3.C3
 
-class C14 {
+class C4 {
   def getLinesFromFile(): List[String] = {
     Source
       .fromFile("4.txt")
@@ -11,7 +11,7 @@ class C14 {
       .toList
   }
 
-  def getBestKeyFromLines(lines: List[String], c: C13, bestLine: String, bestScore: Double): String = {
+  def getBestKeyFromLines(lines: List[String], c: C3, bestLine: String, bestScore: Double): String = {
     // Use breakSIngleByeXORCipher on each line.
     // Use this to get the lowest plain text score
     lines match {
@@ -39,7 +39,7 @@ class C14 {
   def detectSingleCharacterXOR(): String = {
     // Open the file and create an array of the lines
     val fileLines = getLinesFromFile()
-    val line = getBestKeyFromLines(fileLines, c = new C13, "", Double.MaxValue)
+    val line = getBestKeyFromLines(fileLines, c = new C3, "", Double.MaxValue)
     println(s"Line: $line")
     //line.split("(?<=\\G..)").map(_ ^ i).map(_.toChar).mkString("")
     line

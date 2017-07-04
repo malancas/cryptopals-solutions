@@ -1,16 +1,8 @@
-/*
-The hex encoded string:
-1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736
-has been XOR'd against a single character. Find the key, decrypt the message.
-You can do this by hand. But don't: write code to do it for you.
-How? Devise some method for "scoring" a piece of English plaintext. Character
- frequency is a good metric. Evaluate each output and choose the one with the best score.
-*/
-package c13
+package c3
 
-import c12.C12
+import c2.C2
 
-class C13 {
+class C3 {
   // Sourced from: https://www.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html
   val referenceHash = Map('e' -> 12.02, 't' -> 9.10, 'a' -> 8.12, 'o' -> 7.68, 'i' -> 7.31, 'n' -> 6.95,
     's' -> 6.28, 'r' -> 6.02, 'h' -> 5.92, 'd' -> 4.32, 'l' -> 3.89, 'u' -> 2.88, 'c' -> 2.71, 'm' -> 2.61,
@@ -57,7 +49,7 @@ class C13 {
 
   def breakSingleByteXORCipher(hexStr: String): Int = {
     // Get the an array containing the decimal conversions of each hex digit
-    val c = new C12
+    val c = new C2
     val decimalArray = c.convertHexArrayToDecimalArray(hexStr.split("(?<=\\G..)"))
 
     // Try xoring with each possible character and score the plaint text
