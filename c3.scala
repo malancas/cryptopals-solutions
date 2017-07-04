@@ -17,18 +17,18 @@ class C3 {
     }
   }
 
-  def scorePlainText(plainText: String): Double = {
+  def scorePlaintext(plaintext: String): Double = {
     // Make all letters lowercase for easier letter frequency analysis
-    val loweredCase = plainText.toLowerCase()
+    val loweredCase = plaintext.toLowerCase()
 
-    // Create a map of frequency values by mapping each letter that appears in the plain text string
+    // Create a map of frequency values by mapping each letter that appears in the plaintext string
     // to the number of times it appears over the length of the string itself
-    val frequencyMap = plainText.groupBy(c => c).mapValues(_.length.toDouble / plainText.length)
+    val frequencyMap = plaintext.groupBy(c => c).mapValues(_.length.toDouble / plaintext.length)
 
     makePlaintextScore(0, 0.0, frequencyMap)
   }
 
-  def convertDecimalArrayToPlainTextArray(decimalArray: Array[Int]): Array[Char] = {
+  def convertDecimalArrayToPlaintextArray(decimalArray: Array[Int]): Array[Char] = {
     decimalArray
       .map(_.toChar)
   }
@@ -39,13 +39,17 @@ class C3 {
     }
     else {
       // XOR with the decimal i
-      val xored = decimalArray.map(_ ^ i).map(_.toChar).mkString("")
-      val plaintext = xored.map(_.toChar).mkString("")
-      val currScore = scorePlainText(plaintext)
+      val xored = decimalArray.map(_ ^ i)
+      // Make a plaintext string from the XORed decimal array
+      val plaintext = convertDecimalArrayToPlaintextArray(xored).mkString("")
+      // Get a new letter frequency score using the plaintext and the current key i
+      val currScore = scorePlaintext(plaintext)
 
+      // Call findBestKey again with currScore if it's better (smaller) than the current best score
       if (currScore < bestScore){
         findBestKey(decimalArray, i+1, currScore, i)
       }
+      // Otherwise, call the function again using bestScore
       else {
         findBestKey(decimalArray, i+1, bestScore, bestKey)
       }
