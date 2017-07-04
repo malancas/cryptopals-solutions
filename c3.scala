@@ -1,5 +1,6 @@
 package c3
 
+import c1.C1
 import c2.C2
 
 class C3 {
@@ -58,8 +59,11 @@ class C3 {
 
   def breakSingleByteXORCipher(hexStr: String): Int = {
     // Get the an array containing the decimal conversions of each hex digit
-    val c = new C2
-    val decimalArray = c.convertHexArrayToDecimalArray(hexStr.split("(?<=\\G..)"))
+    val c1 = new C1
+    val c2 = new C2
+
+    val hexArray = c1.splitStringIntoArray(hexStr, 2)
+    val decimalArray = c2.convertHexArrayToDecimalArray(hexArray)
 
     // Try xoring with each possible character and score the plaint text
     val (bestKey, bestScore) = findBestKey(decimalArray, 0, Double.MaxValue, 0)
