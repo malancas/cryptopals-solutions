@@ -32,9 +32,6 @@ class C4 {
             .map(_ ^ lineKey)
             .map(_.toChar)
             .mkString("")
-          //println(s"Decoded: $decoded")
-          println(s"line Key: $lineKey")
-          println(s"Decoded: $decoded")
 
           getBestKeyFromLines(t, decoded, lineScore, lineKey)
         }
@@ -43,13 +40,6 @@ class C4 {
         }
       }
       case _ => {
-        println(s"Best score: $bestScore")
-        println(s"Best line: $bestLine")
-        println(s"Best key: $bestKey")
-        //println(bestLine.split("(?<=\\G..)").map(Integer.parseInt(_, 16)).map(_ ^ bestKey).map(_.toChar).mkString(""))
-        val lineArray = c1.splitStringIntoArray(bestLine, 2)
-        //val decimalArray = c2.convertHexArrayToDecimalArray(lineArray)
-        //println(decimalArray.map(_ ^ bestKey).map(_.toChar).mkString(""))
         bestLine
       }
     }
@@ -60,6 +50,7 @@ class C4 {
     val lines = getLinesFromFile()
 
     val xoredLine = getBestKeyFromLines(lines, "", Double.MinValue, 0)
+    println(xoredLine)
     xoredLine
   }
 }
