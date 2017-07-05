@@ -18,7 +18,7 @@ class C4 {
       .toList
   }
 
-  def getBestKeyFromLines(lines: List[String], bestLine: String, bestScore: Double, bestKey: Int): String = {
+  def getSingleCharXORLineFromLines(lines: List[String], bestLine: String, bestScore: Double, bestKey: Int): String = {
     // Use breakSIngleByeXORCipher on each line.
     // Use this to get the lowest plain text score
     lines match {
@@ -33,10 +33,10 @@ class C4 {
             .map(_.toChar)
             .mkString("")
 
-          getBestKeyFromLines(t, decoded, lineScore, lineKey)
+          getSingleCharXORLineFromLines(t, decoded, lineScore, lineKey)
         }
         else {
-          getBestKeyFromLines(t, bestLine, bestScore, bestKey)
+          getSingleCharXORLineFromLines(t, bestLine, bestScore, bestKey)
         }
       }
       case _ => {
@@ -49,7 +49,7 @@ class C4 {
     // Open the file and get a list of the lines
     val lines = getLinesFromFile()
 
-    val xoredLine = getBestKeyFromLines(lines, "", Double.MinValue, 0)
+    val xoredLine = getSingleCharXORLineFromLines(lines, "", Double.MinValue, 0)
     println(xoredLine)
     xoredLine
   }
