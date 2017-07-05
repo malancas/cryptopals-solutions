@@ -4,17 +4,18 @@ import c1.C1
 import c2.C2
 
 class C3 {
-  // Letter frequencies sourced from: https://www.math.cornell.edu/~mec/2003-2004/cryptography/subs/frequencies.html
-  val referenceMap = Map('e' -> 12.02, 't' -> 9.10, 'a' -> 8.12, 'o' -> 7.68, 'i' -> 7.31, 'n' -> 6.95,
-    's' -> 6.28, 'r' -> 6.02, 'h' -> 5.92, 'd' -> 4.32, 'l' -> 3.89, 'u' -> 2.88, 'c' -> 2.71, 'm' -> 2.61,
-    'f' -> 2.30, 'y' -> 2.11, 'w' -> 2.09, 'g' -> 2.03, 'p' -> 1.82, 'b' -> 1.49, 'v' -> 1.11, 'k' -> 0.69,
-    'x' -> 0.17, 'q' -> 0.11, 'j' -> 0.10, 'z' -> 0.07)
+  val referenceMap2 = Map('a' -> 0.0651738, 'b' -> 0.0124248, 'c' -> 0.0217339, 'd' -> 0.0349835,
+    'e' -> 0.1041442, 'f' -> 0.0197881, 'g' -> 0.0158610, 'h' -> 0.0492888, 'i' -> 0.0558094,
+    'j' -> 0.0009033, 'k' -> 0.0050529, 'l' -> 0.0331490, 'm' -> 0.0202124, 'n' -> 0.0564513,
+    'o' -> 0.0596302, 'p' -> 0.0137645, 'q' -> 0.0008606, 'r' -> 0.0497563, 's' -> 0.0515760,
+    't' -> 0.0729357, 'u' -> 0.0225134, 'v' -> 0.0082903, 'w' -> 0.0171272, 'x' -> 0.0013692,
+    'y' -> 0.0145984, 'z' -> 0.0007836, ' ' -> 0.1918182)
 
-  def makePlaintextScore(i: Int, score: Double, frequencyMap: Map[Char, Double]): Double = {
-    if (i == 256) { score }
+  def makePlaintextScore(i: Int, score: Double, plaintext: String): Double = {
+    if (i == plaintext.length) { score }
     else {
-      val diff = math.abs(frequencyMap.getOrElse(i.toChar, 0.0) - referenceMap.getOrElse(i.toChar, 0.0))
-      makePlaintextScore(i+1, score + diff, frequencyMap)
+      val letterScore = referenceMap2.getOrElse(plaintext.charAt(i), 0.0)
+      makePlaintextScore(i+1, score + letterScore, plaintext)
     }
   }
 
@@ -24,14 +25,25 @@ class C3 {
 
     // Create a map of frequency values by mapping each letter that appears in the plaintext string
     // to the number of times it appears over the length of the string itself
-    val frequencyMap = plaintext.groupBy(c => c).mapValues(_.length.toDouble / plaintext.length)
+    //val frequencyMap = plaintext.groupBy(c => c).mapValues(_.length.toDouble / plaintext.length)
 
-    makePlaintextScore(0, 0.0, frequencyMap)
+    makePlaintextScore(0, 0.0, loweredCase)
   }
 
   def convertDecimalArrayToPlaintextArray(decimalArray: Array[Int]): Array[Char] = {
     decimalArray
       .map(_.toChar)
+  }
+
+  // Decode a hex string to a plaintext string using a key
+  def decodeHexStringWithKey(hexStr: String, key: Int): String = {
+    val c1 = new C1
+
+    c1.splitStringIntoArray(hexStr, 2)
+      .map(Integer.parseInt(_, 16))
+      .map(_ ^ key)
+      .map(_.toChar)
+      .mkString("")
   }
 
   def findBestKey(decimalArray: Array[Int], i: Int, bestScore: Double, bestKey: Int): (Int, Double) = {
@@ -43,11 +55,12 @@ class C3 {
       val xored = decimalArray.map(_ ^ i)
       // Make a plaintext string from the XORed decimal array
       val plaintext = convertDecimalArrayToPlaintextArray(xored).mkString("")
+
       // Get a new letter frequency score using the plaintext and the current key i
       val currScore = scorePlaintext(plaintext)
 
       // Call findBestKey again with currScore if it's better (smaller) than the current best score
-      if (currScore < bestScore){
+      if (currScore > bestScore){
         findBestKey(decimalArray, i+1, currScore, i)
       }
       // Otherwise, call the function again using bestScore
@@ -66,7 +79,7 @@ class C3 {
     val decimalArray = c2.convertHexArrayToDecimalArray(hexArray)
 
     // Try xoring with each possible character and score the plaint text
-    val (bestKey, bestScore) = findBestKey(decimalArray, 0, Double.MaxValue, 0)
+    val (bestKey, bestScore) = findBestKey(decimalArray, 0, Double.MinValue, 0)
     bestKey
   }
 }

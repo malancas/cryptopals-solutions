@@ -18,43 +18,48 @@ class C4 {
       .toList
   }
 
-  def getBestKeyFromLines(lines: List[String], bestLine: String, bestScore: Double): String = {
+  def getBestKeyFromLines(lines: List[String], bestLine: String, bestScore: Double, bestKey: Int): String = {
     // Use breakSIngleByeXORCipher on each line.
     // Use this to get the lowest plain text score
     lines match {
       case h :: t => {
         val hArray = c1.splitStringIntoArray(h, 2)
         val decimalArray = c2.convertHexArrayToDecimalArray(hArray)
-        val (lineKey, lineScore) = c3.findBestKey(decimalArray, 0, Double.MaxValue, 0)
-        //println(h.split("(?<=\\G..)").map(Integer.parseInt(_, 16)).map(_ ^ lineKey).map(_.toChar).mkString(""))
+        val (lineKey, lineScore) = c3.findBestKey(decimalArray, 0, Double.MinValue, 0)
 
-        if (lineScore < bestScore){
+        if (lineScore > bestScore){
           val decoded = decimalArray
             .map(_ ^ lineKey)
             .map(_.toChar)
             .mkString("")
+          //println(s"Decoded: $decoded")
+          println(s"line Key: $lineKey")
+          println(s"Decoded: $decoded")
 
-          getBestKeyFromLines(t, decoded, lineScore)
+          getBestKeyFromLines(t, decoded, lineScore, lineKey)
         }
         else {
-          getBestKeyFromLines(t, bestLine, bestScore)
+          getBestKeyFromLines(t, bestLine, bestScore, bestKey)
         }
       }
       case _ => {
-        // return the keys here?
-        println(bestScore)
+        println(s"Best score: $bestScore")
+        println(s"Best line: $bestLine")
+        println(s"Best key: $bestKey")
+        //println(bestLine.split("(?<=\\G..)").map(Integer.parseInt(_, 16)).map(_ ^ bestKey).map(_.toChar).mkString(""))
+        val lineArray = c1.splitStringIntoArray(bestLine, 2)
+        //val decimalArray = c2.convertHexArrayToDecimalArray(lineArray)
+        //println(decimalArray.map(_ ^ bestKey).map(_.toChar).mkString(""))
         bestLine
       }
     }
   }
 
   def detectSingleCharacterXOR(): String = {
-    // Open the file and create an array of the lines
-    val fileLines = getLinesFromFile()
-    val line = getBestKeyFromLines(fileLines, "", Double.MaxValue)
-    println(s"Line: $line")
-    //line.split("(?<=\\G..)").map(_ ^ i).map(_.toChar).mkString("")
-    line
-    //"present day, present time"
+    // Open the file and get a list of the lines
+    val lines = getLinesFromFile()
+
+    val xoredLine = getBestKeyFromLines(lines, "", Double.MinValue, 0)
+    xoredLine
   }
 }
