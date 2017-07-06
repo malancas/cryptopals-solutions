@@ -52,8 +52,8 @@ object MainModel {
 
     val c5 = new C5
 
-    var actualResult0 = encodeStringWithRepeatingKeyXOR(plaintext0, key)
-    var actualResult1 = encodeStringWithRepeatingKeyXOR(plaintext1, key)
+    var actualResult0 = c5.encodeStringWithRepeatingKeyXOR(plaintext0, key)
+    var actualResult1 = c5.encodeStringWithRepeatingKeyXOR(plaintext1, key)
 
     assert(expectedResult0 == actualResult0)
     assert(expectedResult1 == actualResult1)
