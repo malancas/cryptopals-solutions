@@ -13,26 +13,13 @@ class C5 {
     }
   }
 
-  /*
-  def convertDecimalArrayToHexString(text: Array[Int], hexEncodedText: String): String = {
-    text match {
-      case h :: t => {
-        val hexedNumber = "%x".format(h)
-        convertDecimalArrayToHexString(text, hexEncodedText + hexNumber)
-
-      }
-      case _ => hexEncodedText
-    }
-  }
-  */
-
-  def convertDecimalArrayToHexString2(i: Int, text: Array[Int], hexEncodedText: String): String = {
+  def convertDecimalArrayToHexString(i: Int, text: Array[Int], hexEncodedText: String): String = {
     if (i == text.length){
       hexEncodedText
     }
     else {
       val hexedNumber = "%x".format(text(i))
-      convertDecimalArrayToHexString2(i+1, text, hexEncodedText + hexedNumber)
+      convertDecimalArrayToHexString(i+1, text, hexEncodedText + hexedNumber)
     }
   }
 
@@ -42,6 +29,6 @@ class C5 {
 
     val xoredArray = applyRepeatingKeyToText(0, keyArray, textArray, Array[Int]())
 
-    convertDecimalArrayToHexString2(0, xoredArray, "")
+    convertDecimalArrayToHexString(0, xoredArray, "")
   }
 }
