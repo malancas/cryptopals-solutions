@@ -1,0 +1,7 @@
+package c5
+
+class C5 {
+  def encodeStringWithRepeatingKeyXOR(plaintext: String, key: String): String = {
+
+  }
+}
