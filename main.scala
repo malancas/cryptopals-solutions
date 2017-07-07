@@ -14,9 +14,9 @@ object MainModel {
     var expectedResult = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
 
     var actualResult = c1.convertHexStringtoBase64String(sampleInput)
-    println(s"Actual result: $actualResult")
-    println(s"Expected result: $expectedResult")
+
     assert(actualResult == expectedResult)
+    println("Challenge 1 passed")
 
     // Challenge 2
     val c2 = new C2
@@ -27,20 +27,21 @@ object MainModel {
     actualResult = c2.getFixedXORofHexBuffers(sampleBuffer0, sampleBuffer1)
     expectedResult = "746865206b696420646f6e277420706c6179"
 
-    println(s"Actual: $actualResult")
-    println(s"Expect: $expectedResult")
     assert(actualResult == expectedResult)
+    println("Challenge 2 passed")
 
     // Challenge 3
     val c3 = new C3
     val sampleHexString = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
     val bestKey = c3.breakSingleByteXORCipher(sampleHexString)
-    println(s"Best key: $bestKey")
+
     assert(bestKey == 88)
+    println("Challenge 3 passed")
 
     // Challenge 4
     val c4 = new C4
     c4.detectSingleCharacterXOR()
+    println("Challenge 4 passed")
 
     // Challenge 5
     val plaintext0 = "Burning 'em, if you ain't quick and nimble"
@@ -53,8 +54,7 @@ object MainModel {
 
     actualResult = c5.encodeStringWithRepeatingKeyXOR(plaintext, key)
 
-    println(expectedResult)
-    println(actualResult)
     assert(expectedResult == actualResult)
+    println("Challenge 5 passed")
   }
 }

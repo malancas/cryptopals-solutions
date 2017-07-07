@@ -50,7 +50,7 @@ class C4 {
     val lines = getLinesFromFile()
 
     val xoredLine = getSingleCharXORLineFromLines(lines, "", Double.MinValue, 0)
-    println(xoredLine)
+    
     xoredLine
   }
 }
