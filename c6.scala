@@ -11,19 +11,8 @@ class C6 {
     "0" * diff + initialBin
   }
 
-  def getDistanceForEachLetter(bStr0: String, bStr1: String): Int = {
-    println(bStr0)
-    println(bStr1)
+  def getDistanceForEachChar(bStr0: String, bStr1: String): Int = {
     bStr0.zip(bStr1).count(c => c._1 != c._2)
-  }
-
-  def getHammingDistanceBetweenStrings_aux(nums: IndexedSeq[Int], sum: Int, i: Int): Int = {
-    if (i == nums.length) {
-      sum
-    }
-    else {
-      getHammingDistanceBetweenStrings_aux(nums, sum + nums(i), i+1)
-    }
   }
 
   def getHammingDistanceBetweenStrings(str0: String, str1: String): Int = {
@@ -31,8 +20,7 @@ class C6 {
     val binaryStr0 = str0.map(toBinary(_))
     val binaryStr1 = str1.map(toBinary(_))
 
-    val nums = binaryStr0.zip(binaryStr1).map(c => getDistanceForEachLetter(c._1, c._2))
-    getHammingDistanceBetweenStrings_aux(nums, 0, 0)
+    binaryStr0.zip(binaryStr1).map(c => getDistanceForEachChar(c._1, c._2)).sum
   }
 
   def decryptFile(): String = {
