@@ -16,7 +16,6 @@ class C5 {
     }
     else {
       val chunk = if (i + key.length >= text.length) (key.length - (i+key.length - text.length)) else key.length
-      //println(chunk)
       val subText = text.slice(i, i+chunk)
       val encodedSubArray = subText.zip(key.slice(0, chunk+1)).map{ case (x, y) => x ^ y }
 
