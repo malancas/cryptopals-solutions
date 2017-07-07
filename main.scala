@@ -3,6 +3,7 @@ import c2.C2
 import c3.C3
 import c4.C4
 import c5.C5
+import c6.C6
 
 object MainModel {
   def main(args: Array[String]): Unit = {
@@ -56,5 +57,9 @@ object MainModel {
 
     assert(expectedResult == actualResult)
     println("Challenge 5 passed")
+
+    // Challenge 6
+    val c6 = new C6
+    println(c6.getHammingDistanceBetweenStrings("this is a test", "wokka wokka!!!"))
   }
 }
