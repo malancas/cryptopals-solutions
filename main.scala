@@ -44,18 +44,17 @@ object MainModel {
 
     // Challenge 5
     val plaintext0 = "Burning 'em, if you ain't quick and nimble"
-    val plaintext1 = "I go crazy when I hear a cymbal"
+    val plaintext = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
     val key = "ICE"
 
-    var expectedResult0 = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272"
-    var expectedResult1 = "a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
+    expectedResult = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
 
     val c5 = new C5
 
-    var actualResult0 = c5.encodeStringWithRepeatingKeyXOR(plaintext0, key)
-    var actualResult1 = c5.encodeStringWithRepeatingKeyXOR(plaintext1, key)
+    actualResult = c5.encodeStringWithRepeatingKeyXOR(plaintext, key)
 
-    assert(expectedResult0 == actualResult0)
-    assert(expectedResult1 == actualResult1)
+    println(expectedResult)
+    println(actualResult)
+    assert(expectedResult == actualResult)
   }
 }
