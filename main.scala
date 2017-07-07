@@ -60,6 +60,6 @@ object MainModel {
 
     // Challenge 6
     val c6 = new C6
-    println(c6.getHammingDistanceBetweenStrings("this is a test", "wokka wokka!!!"))
+    println(c6.getHammingDistance("this is a test", "wokka wokka!!!"))
   }
 }
