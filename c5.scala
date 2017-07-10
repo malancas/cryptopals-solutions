@@ -1,6 +1,8 @@
 package c5
 
 class C5 {
+  // If the digit is less than 16, 0 must be added
+  // to the beginning of the hex representation
   def convertDecimalToHex(digit: Int): String = {
     if (digit < 16){
       "0" + digit.toHexString
@@ -15,9 +17,11 @@ class C5 {
       encodedText
     }
     else {
-      val chunk = if (i + key.length >= text.length) (key.length - (i+key.length - text.length)) else key.length
-      val subText = text.slice(i, i+chunk)
-      val encodedSubArray = subText.zip(key.slice(0, chunk+1)).map{ case (x, y) => x ^ y }
+      // Determine how long the next chunk of text to be encoded is. This will change at the end of
+      // the string, when the length of the key might be larger than the remaining text left to process
+      val subTextLength = if (i + key.length >= text.length) (key.length - (i+key.length - text.length)) else key.length
+      val subText = text.slice(i, i+subTextLength)
+      val encodedSubArray = subText.zip(key.slice(0, subTextLength+1)).map{ case (x, y) => x ^ y }
 
       applyRepeatingKeyToText(i+key.length, key, text, encodedText ++ encodedSubArray)
     }
@@ -28,7 +32,6 @@ class C5 {
       hexEncodedText
     }
     else {
-      //val hexedNumber = "%x".format(text(i))
       val hexedNumber = convertDecimalToHex(text(i))
       convertDecimalArrayToHexString(i+1, text, hexEncodedText + hexedNumber)
     }

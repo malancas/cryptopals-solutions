@@ -1,54 +1,52 @@
 package c6
 
-/*
- Guess key sizes between 2 and 40
- */
-
 class C6 {
   def toBinary(i: Int): String = {
-    val initialBin = i.toBinaryString
-    val diff = 8 - initialBin.length
-    "0" * diff + initialBin
+    // Append zeroes to the binary string so it's eight characters long
+    "0" * (8 - initialBinaryString.length) + initialBinaryString
   }
 
-  def getDistanceForEachChar(bStr0: String, bStr1: String): Int = {
+  // Count the number of differing bits between two binary strings
+  def getHammingDistanceBetweenBinaryStrings(bStr0: String, bStr1: String): Int = {
     bStr0.zip(bStr1).count(c => c._1 != c._2)
   }
 
-  def getHammingDistance(str0: String, str1: String): Int = {
-    //str0.zip(str1).count(c => c._1 != c._2)
-    val binaryStr0 = str0.map(toBinary(_))
-    val binaryStr1 = str1.map(toBinary(_))
+  def getHammingDistanceBetweenText(plaintext0: String, plaintext1: String): Int = {
+    // Convert the plaintexts to binary string arrays
+    val binaryStr0 = plaintext0.map(toBinary(_))
+    val binaryStr1 = plaintext1.map(toBinary(_))
 
-    binaryStr0.zip(binaryStr1).map(c => getDistanceForEachChar(c._1, c._2)).sum
+    // Get the sum of the hamming distance between each element of the arrays
+    binaryStr0.zip(binaryStr1).map(c => getHammingDistanceBetweenBinaryStrings(c._1, c._2)).sum
   }
 
-  def getNormalizedHammingDistance(str0: String, str1: String, keySize: Int): Double = {
-    getHammingDistance(str0, str1).toDouble / keySize
+  def getNormalizedHammingDistanceBetweenText(str0: String, str1: String, keySize: Int): Double = {
+    // Divide the hamming distance by keySize to normalize it
+    getHammingDistanceBetweenText(str0, str1).toDouble / keySize
   }
 
-  def getThreeBestKeySizes(keySize: Int, str0: String, str1: String, smallestArray: Array[Double]): Array[Double] = {
+  def getThreeBestKeySizes(keySize: Int, plaintext0: String, plaintext1: String, smallestHammingDistances: Array[Double]): Array[Double] = {
     if (keySize == 41){
       smallestArray
     }
     else {
-      val hamDistance = getNormalizedHammingDistance(str0, str1, keySize)
+      val hamDistance = getNormalizedHammingDistanceBetweenText(plaintext0, plaintext1, keySize)
 
-      if (smallestArray.length < 3){
-        val newArray = (smallestArray ++ Array(hamDistance)).sorted
+      if (smallestHammingDistances.length < 3){
+        val newArray = (smallestHammingDistances ++ Array(hamDistance)).sorted
         getThreeBestKeySizes(keySize + 1, str0, str1, newArray)
       }
-      else if (hamDistance < smallestArray(2)){
-        val newArray = (smallestArray.slice(0,2) ++ Array(hamDistance)).sorted
+      else if (hamDistance < smallestHammingDistances(2)){
+        val newArray = (smallestHammingDistances.slice(0,2) ++ Array(hamDistance)).sorted
         getThreeBestKeySizes(keySize + 1, str0, str1, newArray)
       }
       else {
-        getThreeBestKeySizes(keySize + 1, str0, str1, smallestArray)
+        getThreeBestKeySizes(keySize + 1, str0, str1, smallestHammingDistances)
       }
     }
   }
 
-  def decryptFile(): String = {
+  def decryptFile(keySize: Int, plaintext:String): String = {
     "nothing yet"
   }
 }
