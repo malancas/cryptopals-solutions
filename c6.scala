@@ -3,7 +3,8 @@ package c6
 class C6 {
   def toBinary(i: Int): String = {
     // Append zeroes to the binary string so it's eight characters long
-    "0" * (8 - initialBinaryString.length) + initialBinaryString
+    val binaryString = i.toBinaryString
+    "0" * (8 - binaryString.length) + binaryString
   }
 
   // Count the number of differing bits between two binary strings
@@ -27,21 +28,21 @@ class C6 {
 
   def getThreeBestKeySizes(keySize: Int, plaintext0: String, plaintext1: String, smallestHammingDistances: Array[Double]): Array[Double] = {
     if (keySize == 41){
-      smallestArray
+      smallestHammingDistances
     }
     else {
       val hamDistance = getNormalizedHammingDistanceBetweenText(plaintext0, plaintext1, keySize)
 
       if (smallestHammingDistances.length < 3){
         val newArray = (smallestHammingDistances ++ Array(hamDistance)).sorted
-        getThreeBestKeySizes(keySize + 1, str0, str1, newArray)
+        getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, newArray)
       }
       else if (hamDistance < smallestHammingDistances(2)){
         val newArray = (smallestHammingDistances.slice(0,2) ++ Array(hamDistance)).sorted
-        getThreeBestKeySizes(keySize + 1, str0, str1, newArray)
+        getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, newArray)
       }
       else {
-        getThreeBestKeySizes(keySize + 1, str0, str1, smallestHammingDistances)
+        getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, smallestHammingDistances)
       }
     }
   }
