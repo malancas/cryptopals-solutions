@@ -1,6 +1,9 @@
 package c6
 
+import scala.util.Sorting.stableSort
+import scala.collection.mutable.PriorityQueue
 import c1.C1
+import c3.C3
 
 class C6 {
   def toBinary(i: Int): String = {
@@ -40,11 +43,11 @@ class C6 {
       val hamDistance = getNormalizedHammingDistanceBetweenText(plaintext0, plaintext1, keySize)
 
       if (smallestHammingDistances.length < 3){
-        val newArray = (smallestHammingDistances ++ Array(hamDistance, keySize)).sortBy(_._1)
+        val newArray = (smallestHammingDistances ++ Array(hamDistance, keySize)).sorted
         getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, newArray)
       }
-      else if (hamDistance < smallestHammingDistances(2)){
-        val newArray = (smallestHammingDistances.slice(0,2) ++ Array(hamDistance, keySize)).sortBy(_._1)
+      else if (hamDistance < smallestHammingDistances(2)(0)){
+        val newArray = (smallestHammingDistances.slice(0,2) ++ Array(hamDistance, keySize)).sorted
         getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, newArray)
       }
       else {
@@ -62,6 +65,8 @@ class C6 {
     val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
 
     // Solve each block like it is a single character XOR
+    val c3 = new C3
+    transposedBlocks.map(c3.breakSingleByteXORCipher(_))
   }
 
   def getTheRepeatingXORKeys(i: Int, bestKeySizes: Array[(Double, Int)], plaintext:String, keys: Array[String]): Array[String] = {
