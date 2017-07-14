@@ -1,6 +1,6 @@
 package c6
 
-import scala.util.Sorting.stableSort
+import scala.io.Source
 import scala.collection.mutable.PriorityQueue
 import c1.C1
 import c3.C3
@@ -31,27 +31,30 @@ class C6 {
     getHammingDistanceBetweenText(str0, str1).toDouble / keySize
   }
 
-  def getThreeBestKeySizes(keySize: Int, plaintext: String, smallestHammingDistances: Array[(Double, Int)]): Array[(Double, Int)] = {
+  def getThreeBestKeySizes(keySize: Int, plaintext: String, smallestHammingDistances: PriorityQueue[(Double, Int)]): PriorityQueue[(Double, Int)] = {
     if (keySize == 41){
       smallestHammingDistances
     }
     else {
       // Get the first two substrings of length keySize
+      println(s"PLAINTEXT: $plaintext")
+
       val plaintext0 = plaintext.substring(0, keySize)
       val plaintext1 = plaintext.substring(keySize, (keySize * 2))
 
       val hamDistance = getNormalizedHammingDistanceBetweenText(plaintext0, plaintext1, keySize)
 
       if (smallestHammingDistances.length < 3){
-        val newArray = (smallestHammingDistances ++ Array(hamDistance, keySize)).sorted
-        getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, newArray)
+        val newArray = smallestHammingDistances ++ PriorityQueue((hamDistance, keySize))
+        getThreeBestKeySizes(keySize + 1, plaintext, newArray)
       }
-      else if (hamDistance < smallestHammingDistances(2)(0)){
-        val newArray = (smallestHammingDistances.slice(0,2) ++ Array(hamDistance, keySize)).sorted
-        getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, newArray)
+      else if (hamDistance < smallestHammingDistances.head._1){
+        smallestHammingDistances.dequeue
+        val newArray = smallestHammingDistances ++ PriorityQueue((hamDistance, keySize))
+        getThreeBestKeySizes(keySize + 1, plaintext, newArray)
       }
       else {
-        getThreeBestKeySizes(keySize + 1, plaintext0, plaintext1, smallestHammingDistances)
+        getThreeBestKeySizes(keySize + 1, plaintext, smallestHammingDistances)
       }
     }
   }
@@ -59,7 +62,7 @@ class C6 {
   def breakRepeatingKeyXORWithChosenKeySize(keySize: Int, plaintext: String): String = {
     val c1 = new C1
     // Separate the plaintext into blocks of keySize length
-    val textBlocks = plaintext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_))
+    val textBlocks = plaintext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
 
     // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc.
     val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
@@ -67,16 +70,14 @@ class C6 {
     // Solve each block like it is a single character XOR
     val c3 = new C3
     transposedBlocks.map(c3.breakSingleByteXORCipher(_))
-  }
 
-  def getTheRepeatingXORKeys(i: Int, bestKeySizes: Array[(Double, Int)], plaintext:String, keys: Array[String]): Array[String] = {
-    breakRepeatingKeyXORWithChosenKeySize()
+    "nothing yet"
   }
 
   def getTheRepeatingXORKeys2(bestKeySizes: List[(Double, Int)], plaintext: String): Array[String] = {
     bestKeySizes match {
       case h :: t => {
-        val key = breakRepeatingKeyXORWithChosenKey(h._1, plaintext)
+        val key = breakRepeatingKeyXORWithChosenKeySize(h._1.toInt, plaintext)
         Array(key) ++ getTheRepeatingXORKeys2(t, plaintext)
       }
       case _ => Array[String]()
@@ -84,13 +85,35 @@ class C6 {
   }
 
   def breakRepeatingKeyXOR(keySize: Int, plaintext:String): String = {
+    
     // Get the three most probable keys
-    val bestKeySizes = getThreeBestKeySizes(2, plaintext, Array[(Double, Int)]())
+    val bestKeySizes = getThreeBestKeySizes(2, plaintext, PriorityQueue[(Double, Int)]())
 
 
     // Get the keys
     getTheRepeatingXORKeys2(bestKeySizes.toList, plaintext)
+    
+    val plaintext2 = "The cat does some stuff"
+    val textBlocks = plaintext2.grouped(2).toArray.map(_.split("(?<=\\G.)"))
+    val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
+
+    transposedBlocks.foreach(x => println(x))
 
     "nothing yet"
+  }
+
+  def getLinesFromFile(): List[String] = {
+    Source
+      .fromFile("6.txt")
+      .getLines
+      .toList 
+  }
+
+  def decryptFile(): Unit = {
+    val fileLines = getLinesFromFile()
+
+    // 1. Solve each transposed block like a single character XOR
+    // 2. Find the correct key for each block
+    // 3. Put these keys together to get the correct key and decrypt the file
   }
 }
