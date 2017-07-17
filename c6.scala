@@ -110,10 +110,17 @@ class C6 {
   }
 
   def decryptFile(): Unit = {
-    val fileLines = getLinesFromFile()
+    // Form a list of the file contents
+    val fileLines = getLinesFromFile().mkString("")
 
-    // 1. Solve each transposed block like a single character XOR
-    // 2. Find the correct key for each block
-    // 3. Put these keys together to get the correct key and decrypt the file
+    // Form a single string made up of the file contents
+    val filePlaintext = fileLines.mkString("")
+
+    val bestKeySizes = getThreeBestKeySizes(2, filePlaintext, PriorityQueue[(Double, Int)]())
+
+    // For each key size
+      // 1. Solve each transposed block like a single character XOR
+      // 2. Find the correct key for each block
+      // 3. Put these keys together to get the correct key and decrypt the file
   }
 }
