@@ -38,8 +38,6 @@ class C6 {
     }
     else {
       // Get the first two substrings of length keySize
-      println(s"PLAINTEXT: $plaintext")
-
       val plaintext0 = plaintext.substring(0, keySize)
       val plaintext1 = plaintext.substring(keySize, (keySize * 2))
 

@@ -60,8 +60,6 @@ object MainModel {
 
     // Challenge 6
     val c6 = new C6
-    println(c6.getHammingDistanceBetweenText("this is a test", "wokka wokka!!!"))
-
-    
+    c6.decryptFile()
   }
 }
