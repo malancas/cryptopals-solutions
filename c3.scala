@@ -22,11 +22,7 @@ class C3 {
   def scorePlaintext(plaintext: String): Double = {
     // Make all letters lowercase for easier letter frequency analysis
     val loweredCase = plaintext.toLowerCase()
-
-    // Create a map of frequency values by mapping each letter that appears in the plaintext string
-    // to the number of times it appears over the length of the string itself
-    //val frequencyMap = plaintext.groupBy(c => c).mapValues(_.length.toDouble / plaintext.length)
-
+    
     makePlaintextScore(0, 0.0, loweredCase)
   }
 

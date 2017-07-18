@@ -4,6 +4,7 @@ import scala.io.Source
 import scala.collection.mutable.PriorityQueue
 import c1.C1
 import c3.C3
+import c5.C5
 
 class C6 {
   def toBinary(i: Int): String = {
@@ -59,7 +60,7 @@ class C6 {
     }
   }
 
-  def breakRepeatingKeyXORWithChosenKeySize(keySize: Int, plaintext: String): String = {
+  def getRepeatingKeyXORWithChosenKeySize(keySize: Int, plaintext: String): String = {
     val c1 = new C1
     // Separate the plaintext into blocks of keySize length
     val textBlocks = plaintext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
@@ -69,15 +70,14 @@ class C6 {
 
     // Solve each block like it is a single character XOR
     val c3 = new C3
-    val mked = transposedBlocks.mkString(" ")
-    println(s"transposedBlocks: $mked")
-    val reapeatingXORKey = transposedBlocks.map(c3.breakSingleByteXORCipher(_)).mkString("")
+    val repeatingXORKey = transposedBlocks.map(c3.breakSingleByteXORCipher(_)).mkString("")
 
     repeatingXORKey
   }
 
+  /*
   // Get the keys that correspond with the best key sizes
-  def getTheRepeatingXORKeys2(bestKeySizes: List[(Double, Int)], plaintext: String): Array[String] = {
+  def getTheRepeatingXORKey(bestKeySizes: List[(Double, Int)], plaintext: String): Array[String] = {
     bestKeySizes match {
       case h :: t => {
         val key = breakRepeatingKeyXORWithChosenKeySize(h._1.toInt, plaintext)
@@ -86,27 +86,7 @@ class C6 {
       case _ => Array[String]()
     }
   }
-
-  def breakRepeatingKeyXOR(keySize: Int, plaintext:String): String = {    
-    // Get the three most probable key sizes
-    val bestKeySizes = getThreeBestKeySizes(2, plaintext, PriorityQueue[(Double, Int)]())
-
-    // Get the keys
-    getTheRepeatingXORKeys2(bestKeySizes.toList, plaintext)
-    
-    val plaintext2 = "The cat does some stuff"
-    val textBlocks = plaintext2.grouped(2).toArray.map(_.split("(?<=\\G.)"))
-    val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
-
-    transposedBlocks.foreach(x => println(x))
-
-    "nothing yet"
-  }
-
-  def breakRepeatingKeyXOR2(keySize: Int, plaintext: String): String = {
-    val textBlocks = plaintext.grouped(keySize).toArray.map(_.split("(?<=\\G."))
-    val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
-  }
+  */
 
   def getLinesFromFile(): List[String] = {
     Source
@@ -125,8 +105,16 @@ class C6 {
     // Get best key sizes
     val bestKeySizes = getThreeBestKeySizes(2, filePlaintext, PriorityQueue[(Double, Int)]())
 
-    // Get the corresponding keys
-    val bestKeys = getTheRepeatingXORKeys2(bestKeySizes.toList, filePlaintext)
+    // Decrypt using only one key size
+    val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(bestKeySizes.head._2, filePlaintext)
+
+    // Decode the file contents with the key
+    val c5 = new C5
+    val decryptedText = c5.encodeStringWithRepeatingKeyXOR(filePlaintext, repeatingXORKey)
+
+    // Score the decrypted text
+    val c3 = new C3
+    val score = c3.scorePlaintext(decryptedText)
 
     // For each key
       // 1. Solve each transposed block like a single character XOR
