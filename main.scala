@@ -61,6 +61,7 @@ object MainModel {
     // Challenge 6
     val c6 = new C6
     println(c6.getHammingDistanceBetweenText("this is a test", "wokka wokka!!!"))
-    println(c6.breakRepeatingKeyXOR(2, "do nothing"))
+
+    
   }
 }
