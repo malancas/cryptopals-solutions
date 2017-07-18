@@ -22,7 +22,7 @@ class C3 {
   def scorePlaintext(plaintext: String): Double = {
     // Make all letters lowercase for easier letter frequency analysis
     val loweredCase = plaintext.toLowerCase()
-    
+
     makePlaintextScore(0, 0.0, loweredCase)
   }
 
