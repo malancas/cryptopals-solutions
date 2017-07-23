@@ -13,7 +13,7 @@ class C4 {
   // Returns an array containing each line from 4.txt as separate elements
   def getLinesFromFile(): List[String] = {
     Source
-      .fromFile("4.txt")
+      .fromResource("4.txt")
       .getLines
       .toList
   }

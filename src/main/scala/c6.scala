@@ -88,7 +88,7 @@ class C6 {
 
   def getLinesFromFile(): List[String] = {
     Source
-      .fromFile("6.txt")
+      .fromResource("6.txt")
       .getLines
       .toList 
   }
