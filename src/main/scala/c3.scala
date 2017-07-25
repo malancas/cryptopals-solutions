@@ -72,6 +72,9 @@ class C3 {
     val c2 = new C2
 
     val hexArray = c1.splitStringIntoArray(hexStr, 2)
+    val stringVer = hexArray.mkString(" ")
+    println(s"string ver: $stringVer")
+
     val decimalArray = c2.convertHexArrayToDecimalArray(hexArray)
 
     // Try xoring with each possible character and score the plaint text

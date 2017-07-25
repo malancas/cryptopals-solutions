@@ -59,11 +59,18 @@ class C6 {
   }
 
   def getRepeatingKeyXORWithChosenKeySize(keySize: Int, plaintext: String): String = {
+    // For each key
+      // 1. Solve each transposed block like a single character XOR
+      // 2. Find the correct key for each block
+      // 3. Put these keys together to get the correct key and decrypt the file
+      // 4. Get the score for each decrypted file text
+      // 5. Return the plain text with the best score
+
     val c1 = new C1
     // Separate the plaintext into blocks of keySize length
     val textBlocks = plaintext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
 
-    // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc.
+    // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc
     val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
 
     // Solve each block like it is a single character XOR
@@ -93,6 +100,30 @@ class C6 {
       .toList 
   }
 
+  def convertBase64DigitToBinaryString(base64Digit: Char): String = {
+    val decimalEquivalent = base64Digit.toInt
+    if (65 <= decimalEquivalent && decimalEquivalent <= 90) {
+      (decimalEquivalent - 65).toBinaryString
+    }
+    else if (97 <= decimalEquivalent && decimalEquivalent <= 122) {
+      (decimalEquivalent - 71).toBinaryString
+    }
+    else if (48 <= decimalEquivalent && decimalEquivalent <= 57) {
+      (decimalEquivalent + 4).toBinaryString
+    }
+    else if (decimalEquivalent == 43){
+      (decimalEquivalent + 19).toBinaryString
+    }
+    else { // decimalEquivalent == 47
+      (decimalEquivalent + 16).toBinaryString
+    }
+  }
+
+  def convertBase64DigitToSixDigitBinaryString(base64Digit: Char): String = {
+    val binaryString = convertBase64DigitToBinaryString(base64Digit)
+    "0" * (6 - binaryString.length) + binaryString
+  }
+
   def decryptFile(): Unit = {
     // Form a list of the file contents
     val fileLines = getLinesFromFile()
@@ -113,12 +144,5 @@ class C6 {
     // Score the decrypted text
     val c3 = new C3
     val score = c3.scorePlaintext(decryptedText)
-
-    // For each key
-      // 1. Solve each transposed block like a single character XOR
-      // 2. Find the correct key for each block
-      // 3. Put these keys together to get the correct key and decrypt the file
-      // 4. Get the score for each decrypted file text
-      // 5. Return the plain text with the best score
   }
 }
