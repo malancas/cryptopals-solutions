@@ -97,7 +97,7 @@ class C6 {
     Source
       .fromResource("6.txt")
       .getLines
-      .toList 
+      .toList
   }
 
   def convertBase64DigitToBinaryString(base64Digit: Char): String = {
@@ -129,17 +129,28 @@ class C6 {
     val fileLines = getLinesFromFile()
 
     // Form a single string made up of the file contents
-    val filePlaintext = fileLines.mkString("")
+    val base64EncodedTextList = fileLines.mkString("").toList
+
+    // Binary plaintext string converted from the base 64 encoded text from the file
+    val binaryEncodedTextString = base64EncodedTextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
+
+    // Decode the binary string to plaintext
+    val c = new C1
+    val plaintext = c
+      .splitStringIntoArray(binaryEncodedTextString, 8)
+      .map(Integer.parseInt(_, 2))
+      .map(_.toChar)
+      .mkString("")
 
     // Get best key sizes
-    val bestKeySizes = getThreeBestKeySizes(2, filePlaintext, PriorityQueue[(Double, Int)]())
+    val bestKeySizes = getThreeBestKeySizes(2, plaintext, PriorityQueue[(Double, Int)]())
 
     // Decrypt using only one key size
-    val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(bestKeySizes.head._2, filePlaintext)
+    val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(bestKeySizes.head._2, plaintext)
 
     // Decode the file contents with the key
     val c5 = new C5
-    val decryptedText = c5.encodeStringWithRepeatingKeyXOR(filePlaintext, repeatingXORKey)
+    val decryptedText = c5.encodeStringWithRepeatingKeyXOR(plaintext, repeatingXORKey)
 
     // Score the decrypted text
     val c3 = new C3

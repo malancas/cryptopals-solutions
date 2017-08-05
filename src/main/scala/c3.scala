@@ -4,7 +4,7 @@ import c1.C1
 import c2.C2
 
 class C3 {
-  val referenceMap2 = Map('a' -> 0.0651738, 'b' -> 0.0124248, 'c' -> 0.0217339, 'd' -> 0.0349835,
+  val referenceMap = Map('a' -> 0.0651738, 'b' -> 0.0124248, 'c' -> 0.0217339, 'd' -> 0.0349835,
     'e' -> 0.1041442, 'f' -> 0.0197881, 'g' -> 0.0158610, 'h' -> 0.0492888, 'i' -> 0.0558094,
     'j' -> 0.0009033, 'k' -> 0.0050529, 'l' -> 0.0331490, 'm' -> 0.0202124, 'n' -> 0.0564513,
     'o' -> 0.0596302, 'p' -> 0.0137645, 'q' -> 0.0008606, 'r' -> 0.0497563, 's' -> 0.0515760,
@@ -14,7 +14,7 @@ class C3 {
   def makePlaintextScore(i: Int, score: Double, plaintext: String): Double = {
     if (i == plaintext.length) { score }
     else {
-      val letterScore = referenceMap2.getOrElse(plaintext.charAt(i), 0.0)
+      val letterScore = referenceMap.getOrElse(plaintext.charAt(i), 0.0)
       makePlaintextScore(i+1, score + letterScore, plaintext)
     }
   }
