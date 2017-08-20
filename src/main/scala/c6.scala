@@ -131,7 +131,7 @@ class C6 {
     // Form a single string made up of the file contents
     val base64EncodedTextList = fileLines.mkString("").toList
 
-    // Binary plaintext string converted from the base 64 encoded text from the file
+    // Convert the base 64 encoded text from the file to a binary string
     val binaryEncodedTextString = base64EncodedTextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
 
     // Decode the binary string to plaintext
