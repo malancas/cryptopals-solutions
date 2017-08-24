@@ -66,7 +66,7 @@ class C3 {
     }
   }
 
-  def breakSingleByteXORCipher(hexStr: String): Int = {
+  def breakHexCipherSingleByteXORCipher(hexStr: String): Int = {
     // Get the an array containing the decimal conversions of each hex digit
     val c1 = new C1
     val c2 = new C2
@@ -76,15 +76,6 @@ class C3 {
 
     // Try xoring with each possible character and score the plaint text
     val (bestKey, bestScore) = findBestKey(decimalArray, 0, Double.MinValue, 0)
-    bestKey
-  }
-
-  def breakSingleByteXORCipher_noHex(cipherText: String): Int = {
-    val c1 = new C1
-    val cipherArray = c1.splitStringIntoArray(cipherText, 1).map(_.toInt)
-
-    // Try xoring with each possible character and score the plaint text
-    val (bestKey, bestScore) = findBestKey(cipherArray, 0, Double.MinValue, 0)
     bestKey
   }
 }

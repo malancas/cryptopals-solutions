@@ -85,7 +85,10 @@ class C6 {
 
     // Solve each block like it is a single character XOR
     val c3 = new C3
-    val repeatingXORKey = transposedBlocks.map(c3.breakSingleByteXORCipher_noHex(_)).mkString("")
+    val arrayBlocks = transposedBlocks.map(c1.splitStringIntoArray(_, 1).map(_.toInt))
+    // findBestKey(decimalArray, 0, Double.MinValue, 0)
+    val repeatingXORKey = arrayBlocks.map(c3.findBestKey(_, 0, Double.MinValue, 0)).mkString("")    
+    //val repeatingXORKey = transposedBlocks.map(c3.breakSingleByteXORCipher_noHex(_)).mkString("")
 
     repeatingXORKey
   }
