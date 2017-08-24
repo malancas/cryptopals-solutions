@@ -1,5 +1,7 @@
 package c5
 
+import scala.annotation.tailrec
+
 class C5 {
   // If the digit is less than 16, 0 must be added
   // to the beginning of the hex representation
@@ -12,7 +14,8 @@ class C5 {
     }
   }
   
-  def applyRepeatingKeyToText(i: Int, key: Array[Char], text: Array[Char], encodedText: Array[Int]): Array[Int] = {
+  @tailrec
+  private def applyRepeatingKeyToText(i: Int, key: Array[Char], text: Array[Char], encodedText: Array[Int]): Array[Int] = {
     if (i >= text.length) {
       encodedText
     }
@@ -27,7 +30,8 @@ class C5 {
     }
   }
 
-  def convertDecimalArrayToHexString(i: Int, text: Array[Int], hexEncodedText: String): String = {
+  @tailrec
+  private def convertDecimalArrayToHexString(i: Int, text: Array[Int], hexEncodedText: String): String = {
     if (i == text.length){
       hexEncodedText
     }

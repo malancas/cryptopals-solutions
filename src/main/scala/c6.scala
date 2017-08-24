@@ -2,6 +2,7 @@ package c6
 
 import scala.io.Source
 import scala.collection.mutable.PriorityQueue
+import scala.annotation.tailrec
 import c1.C1
 import c3.C3
 import c5.C5
@@ -36,7 +37,8 @@ class C6 {
     getHammingDistanceBetweenBinaryStrings(bin0, bin1)
   }
 
-  def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, smallestHammingDistances: PriorityQueue[(Double, Int)]): PriorityQueue[(Double, Int)] = {
+  @tailrec
+  private def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, smallestHammingDistances: PriorityQueue[(Double, Int)]): PriorityQueue[(Double, Int)] = {
     if (keySize == 41 || binaryCiphertext.length < keySize * 2){
       smallestHammingDistances
     }
