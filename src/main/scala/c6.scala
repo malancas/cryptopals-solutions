@@ -38,7 +38,7 @@ class C6 {
   }
 
   @tailrec
-  private def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, smallestHammingDistances: PriorityQueue[(Double, Int)]): PriorityQueue[(Double, Int)] = {
+  final def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, smallestHammingDistances: PriorityQueue[(Double, Int)]): PriorityQueue[(Double, Int)] = {
     if (keySize == 41 || binaryCiphertext.length < keySize * 2){
       smallestHammingDistances
     }

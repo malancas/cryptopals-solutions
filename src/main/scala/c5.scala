@@ -15,7 +15,7 @@ class C5 {
   }
   
   @tailrec
-  private def applyRepeatingKeyToText(i: Int, key: Array[Char], text: Array[Char], encodedText: Array[Int]): Array[Int] = {
+  final def applyRepeatingKeyToText(i: Int, key: Array[Char], text: Array[Char], encodedText: Array[Int]): Array[Int] = {
     if (i >= text.length) {
       encodedText
     }
@@ -31,7 +31,7 @@ class C5 {
   }
 
   @tailrec
-  private def convertDecimalArrayToHexString(i: Int, text: Array[Int], hexEncodedText: String): String = {
+  final def convertDecimalArrayToHexString(i: Int, text: Array[Int], hexEncodedText: String): String = {
     if (i == text.length){
       hexEncodedText
     }

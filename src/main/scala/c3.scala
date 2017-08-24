@@ -1,5 +1,6 @@
 package c3
 
+import scala.annotation.tailrec
 import c1.C1
 import c2.C2
 
@@ -11,7 +12,8 @@ class C3 {
     't' -> 0.0729357, 'u' -> 0.0225134, 'v' -> 0.0082903, 'w' -> 0.0171272, 'x' -> 0.0013692,
     'y' -> 0.0145984, 'z' -> 0.0007836, ' ' -> 0.1918182)
 
-  def makePlaintextScore(i: Int, score: Double, plaintext: String): Double = {
+  @tailrec
+  final def makePlaintextScore(i: Int, score: Double, plaintext: String): Double = {
     if (i == plaintext.length) { score }
     else {
       val letterScore = referenceMap.getOrElse(plaintext.charAt(i), 0.0)
@@ -42,7 +44,8 @@ class C3 {
       .mkString("")
   }
 
-  def findBestKey(decimalArray: Array[Int], i: Int, bestScore: Double, bestKey: Int): (Int, Double) = {
+  @tailrec
+  final def findBestKey(decimalArray: Array[Int], i: Int, bestScore: Double, bestKey: Int): (Int, Double) = {
     if (i == 256){
       (bestKey, bestScore)
     }
