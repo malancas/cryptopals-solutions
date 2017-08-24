@@ -72,13 +72,19 @@ class C3 {
     val c2 = new C2
 
     val hexArray = c1.splitStringIntoArray(hexStr, 2)
-    val stringVer = hexArray.mkString(" ")
-    println(s"string ver: $stringVer")
-
     val decimalArray = c2.convertHexArrayToDecimalArray(hexArray)
 
     // Try xoring with each possible character and score the plaint text
     val (bestKey, bestScore) = findBestKey(decimalArray, 0, Double.MinValue, 0)
+    bestKey
+  }
+
+  def breakSingleByteXORCipher_noHex(cipherText: String): Int = {
+    val c1 = new C1
+    val cipherArray = c1.splitStringIntoArray(cipherText, 1).map(_.toInt)
+
+    // Try xoring with each possible character and score the plaint text
+    val (bestKey, bestScore) = findBestKey(cipherArray, 0, Double.MinValue, 0)
     bestKey
   }
 }

@@ -11,7 +11,7 @@ class C5 {
       digit.toHexString
     }
   }
-
+  
   def applyRepeatingKeyToText(i: Int, key: Array[Char], text: Array[Char], encodedText: Array[Int]): Array[Int] = {
     if (i >= text.length) {
       encodedText
@@ -43,6 +43,9 @@ class C5 {
 
     val xoredArray = applyRepeatingKeyToText(0, keyArray, textArray, Array[Int]())
     val xoredStr = xoredArray.mkString(" ")
+
+    //val len = xoredArray.length
+    //println(s"len: $len")
 
     convertDecimalArrayToHexString(0, xoredArray, "")
   }

@@ -32,33 +32,39 @@ class C6 {
     getHammingDistanceBetweenText(str0, str1).toDouble / keySize
   }
 
-  def getThreeBestKeySizes(keySize: Int, plaintext: String, smallestHammingDistances: PriorityQueue[(Double, Int)]): PriorityQueue[(Double, Int)] = {
-    if (keySize == 41 || plaintext.length < keySize * 2){
+  def getNormalizedHammingDistanceBetweenBinaryStrings(bin0: String, bin1: String, keySize: Int): Double = {
+    getHammingDistanceBetweenBinaryStrings(bin0, bin1)
+  }
+
+  def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, smallestHammingDistances: PriorityQueue[(Double, Int)]): PriorityQueue[(Double, Int)] = {
+    if (keySize == 41 || binaryCiphertext.length < keySize * 2){
       smallestHammingDistances
     }
     else {
       // Get the first two substrings of length keySize
-      val plaintext0 = plaintext.substring(0, keySize)
-      val plaintext1 = plaintext.substring(keySize, (keySize * 2))
+      //val plaintext0 = plaintext.substring(0, keySize)
+      //val plaintext1 = plaintext.substring(keySize, (keySize * 2))
+      val binarySubString0 = binaryCiphertext.substring(0, keySize * 8)
+      val binarySubString1 = binaryCiphertext.substring(keySize * 8, (keySize * 8 * 2))
 
-      val hamDistance = getNormalizedHammingDistanceBetweenText(plaintext0, plaintext1, keySize)
+      val hamDistance = getNormalizedHammingDistanceBetweenBinaryStrings(binarySubString0, binarySubString1, keySize)
 
       if (smallestHammingDistances.length < 3){
         val newArray = smallestHammingDistances ++ PriorityQueue((hamDistance, keySize))
-        getThreeBestKeySizes(keySize + 1, plaintext, newArray)
+        getThreeBestKeySizes(keySize + 1, binaryCiphertext, newArray)
       }
       else if (hamDistance < smallestHammingDistances.head._1){
         smallestHammingDistances.dequeue
         val newArray = smallestHammingDistances ++ PriorityQueue((hamDistance, keySize))
-        getThreeBestKeySizes(keySize + 1, plaintext, newArray)
+        getThreeBestKeySizes(keySize + 1, binaryCiphertext, newArray)
       }
       else {
-        getThreeBestKeySizes(keySize + 1, plaintext, smallestHammingDistances)
+        getThreeBestKeySizes(keySize + 1, binaryCiphertext, smallestHammingDistances)
       }
     }
   }
 
-  def getRepeatingKeyXORWithChosenKeySize(keySize: Int, plaintext: String): String = {
+  def getRepeatingKeyXORWithChosenKeySize(keySize: Int, binaryCiphertext: String): String = {
     // For each key
       // 1. Solve each transposed block like a single character XOR
       // 2. Find the correct key for each block
@@ -68,30 +74,36 @@ class C6 {
 
     val c1 = new C1
     // Separate the plaintext into blocks of keySize length
-    val textBlocks = plaintext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
+    // Seperate each binary number and convert them into decimal equivalents
+    val decimalCiphertext = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2)).mkString("")
+
+    // Group the numbers into keySize length chunks
+    val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
 
     // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc
     val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
 
     // Solve each block like it is a single character XOR
     val c3 = new C3
-    val repeatingXORKey = transposedBlocks.map(c3.breakSingleByteXORCipher(_)).mkString("")
+    val repeatingXORKey = transposedBlocks.map(c3.breakSingleByteXORCipher_noHex(_)).mkString("")
 
     repeatingXORKey
   }
 
-  /*
+
   // Get the keys that correspond with the best key sizes
-  def getTheRepeatingXORKey(bestKeySizes: List[(Double, Int)], plaintext: String): Array[String] = {
-    bestKeySizes match {
-      case h :: t => {
-        val key = breakRepeatingKeyXORWithChosenKeySize(h._1.toInt, plaintext)
-        Array(key) ++ getTheRepeatingXORKeys2(t, plaintext)
-      }
-      case _ => Array[String]()
-    }
-  }
-  */
+  /*
+   * def getTheRepeatingXORKey(bestKeySizes: List[(Double, Int)], plaintext: String): Array[String] = {
+   *  bestKeySizes match {
+   *   case h :: t => {
+   *     val key = breakRepeatingKeyXORWithChosenKeySize(h._1.toInt, plaintext)
+   *      Array(key) ++ getTheRepeatingXORKeys2(t, plaintext)
+   *   }
+   *   case _ => Array[String]()
+   * }
+   *}
+   */
+
 
   def getLinesFromFile(): List[String] = {
     Source
@@ -124,36 +136,78 @@ class C6 {
     "0" * (6 - binaryString.length) + binaryString
   }
 
+  def decryptWithAllKeys(binaryCiphertext: String, keys: List[(Double, Int)]): Unit = {
+    keys match {
+      case h :: t => {
+        // Decrypt using only one key size
+        val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(h._2, binaryCiphertext)
+
+        // Convert binary ciphertext to its decimal equivalent
+        val c = new C1
+        val decimalCiphertext = c
+          .splitStringIntoArray(binaryCiphertext, 8)
+          .map(Integer.parseInt(_, 2))
+          .mkString("")
+
+        // Decode the file contents with the key
+        val c5 = new C5
+        val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
+        println(s"DECRYPTED: $decryptedText")
+
+        // Score the decrypted text
+        val c3 = new C3
+        val score = c3.scorePlaintext(decryptedText)
+
+        decryptWithAllKeys(binaryCiphertext, t)
+      }
+      case Nil => "Done"
+    }
+  }
+
   def decryptFile(): Unit = {
     // Form a list of the file contents
     val fileLines = getLinesFromFile()
 
     // Form a single string made up of the file contents
-    val base64EncodedTextList = fileLines.mkString("").toList
+    val base64CiphertextList = fileLines.mkString("").toList
 
     // Convert the base 64 encoded text from the file to a binary string
-    val binaryEncodedTextString = base64EncodedTextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
+    val binaryCiphertext = base64CiphertextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
 
     // Decode the binary string to plaintext
     val c = new C1
+    /*
     val plaintext = c
-      .splitStringIntoArray(binaryEncodedTextString, 8)
+      .splitStringIntoArray(binaryCiphertext, 8)
       .map(Integer.parseInt(_, 2))
       .map(_.toChar)
       .mkString("")
+    */
+    
+    // Convert binary ciphertext to its decimal equivalent
+    val decimalCiphertext = c
+      .splitStringIntoArray(binaryCiphertext, 8)
+      .map(Integer.parseInt(_, 2))
+      .mkString("")
 
     // Get best key sizes
-    val bestKeySizes = getThreeBestKeySizes(2, plaintext, PriorityQueue[(Double, Int)]())
+    val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, PriorityQueue[(Double, Int)]()).toList
 
+    decryptWithAllKeys(binaryCiphertext, bestKeySizes)
+
+    /*
     // Decrypt using only one key size
-    val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(bestKeySizes.head._2, plaintext)
+    val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(bestKeySizes.head._2, binaryCiphertext)
+    println(s"repeating key: $repeatingXORKey")
 
     // Decode the file contents with the key
     val c5 = new C5
-    val decryptedText = c5.encodeStringWithRepeatingKeyXOR(plaintext, repeatingXORKey)
+    val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
+    println(decryptedText)
 
     // Score the decrypted text
     val c3 = new C3
     val score = c3.scorePlaintext(decryptedText)
+    */
   }
 }
