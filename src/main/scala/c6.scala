@@ -93,21 +93,6 @@ class C6 {
     repeatingXORKey
   }
 
-
-  // Get the keys that correspond with the best key sizes
-  /*
-   * def getTheRepeatingXORKey(bestKeySizes: List[(Double, Int)], plaintext: String): Array[String] = {
-   *  bestKeySizes match {
-   *   case h :: t => {
-   *     val key = breakRepeatingKeyXORWithChosenKeySize(h._1.toInt, plaintext)
-   *      Array(key) ++ getTheRepeatingXORKeys2(t, plaintext)
-   *   }
-   *   case _ => Array[String]()
-   * }
-   *}
-   */
-
-
   def getLinesFromFile(): List[String] = {
     Source
       .fromResource("6.txt")
