@@ -127,7 +127,7 @@ class C6 {
   }
 
   def decryptWithAllKeys(binaryCiphertext: String, keys: Array[(Double, Int)]): Unit = {
-    for( i <- 0 until 2){
+    for( i <- 0 to 2){
       // Decrypt using only one key size
       val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(keys(i)._2, binaryCiphertext)
 
