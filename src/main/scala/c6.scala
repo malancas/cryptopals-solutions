@@ -82,17 +82,23 @@ class C6 {
       // 4. Get the score for each decrypted file text
       // 5. Return the plain text with the best score
 
+    // Convert binary cipher text to character equivalent
+
     val c1 = new C1
     val c5 = new C5
     // Separate the plaintext into blocks of keySize length
     // Seperate each binary number and convert them into decimal equivalents
-    //val decimalCiphertext = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2)).mkString("")
     val decimalCipherArray = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2))
+    val decimalCiphertext = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2)).mkString("")
+    val characterCiphertext = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2).toChar)    
+
     val hexCiphertext = c5.convertDecimalArrayToHexString(0, decimalCipherArray, "")
 
     // Group the numbers into keySize length chunks
-    //val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
-    val textBlocks = hexCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 2))
+    val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
+    val textBlocks2 = textBlocks.map(_.map(_.toInt)).map(c5.convertDecimalArrayToHexString(0, _, ""))
+    //val textBlocks = hexCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 2))
+    //val textBlocks = characterCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
 
     // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc
     val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
@@ -182,7 +188,7 @@ class C6 {
       val c5 = new C5
       val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
       val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
-      println(s"decrypted: $decryptedText2")
+      println(s"DECRYPTED: $decryptedText2")
 
       // Score the decrypted text
       val c3 = new C3
