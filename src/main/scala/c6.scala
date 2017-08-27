@@ -75,24 +75,30 @@ class C6 {
       // 5. Return the plain text with the best score
 
     val c1 = new C1
+    val c5 = new C5
     // Separate the plaintext into blocks of keySize length
     // Seperate each binary number and convert them into decimal equivalents
-    val decimalCiphertext = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2)).mkString("")
+    //val decimalCiphertext = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2)).mkString("")
+    val decimalCipherArray = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2))
+    val hexCiphertext = c5.convertDecimalArrayToHexString(0, decimalCipherArray, "")
 
     // Group the numbers into keySize length chunks
-    val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
+    //val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
+    val textBlocks = hexCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 2))
 
     // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc
     val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
 
     // Solve each block like it is a single character XOR
     val c3 = new C3
-    val arrayBlocks = transposedBlocks.map(c1.splitStringIntoArray(_, 1).map(_.toInt))
-    // findBestKey(decimalArray, 0, Double.MinValue, 0)
-    val repeatingXORKey = arrayBlocks.map(c3.findBestKey(_, 0, Double.MinValue, 0)).mkString("")    
-    //val repeatingXORKey = transposedBlocks.map(c3.breakSingleByteXORCipher_noHex(_)).mkString("")
+    //val arrayBlocks = transposedBlocks.map(c1.splitStringIntoArray(_, 1).map(_.toInt))
+    //val repeatingXORKey = arrayBlocks.map(c3.findBestKey(_, 0, Double.MinValue, 0)).toList.map(_._1).mkString("")   
+    val repeatingXORKeytemp = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_).toChar).mkString(" ")
+    println(s"temp: $repeatingXORKeytemp")
+    val repeatingXORKey = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_)).mkString("") 
 
-    repeatingXORKey
+    //repeatingXORKey
+    repeatingXORKeytemp
   }
 
   def getLinesFromFile(): List[String] = {
@@ -128,8 +134,15 @@ class C6 {
 
   def decryptWithAllKeys(binaryCiphertext: String, keys: Array[(Double, Int)]): Unit = {
     for( i <- 0 to 2){
+      val temp = keys(i)._1
+      val temp2 = keys(i)._2
+      
+      //println(s"keys1: $temp")
+      //println(s"keys2: $temp2")
+
       // Decrypt using only one key size
       val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(keys(i)._2, binaryCiphertext)
+      //println(s"repeatingKey: $repeatingXORKey")
 
       // Convert binary ciphertext to its decimal equivalent
       val c = new C1
@@ -138,10 +151,43 @@ class C6 {
         .map(Integer.parseInt(_, 2))
         .mkString("")
 
+      //println(s"decimal ciphers: $decimalCiphertext")
+
       // Decode the file contents with the key
       val c5 = new C5
       val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
-      println(s"DECRYPTED: $decryptedText")
+      //println(s"DECRYPTED: $decryptedText")
+
+      // Score the decrypted text
+      val c3 = new C3
+      val score = c3.scorePlaintext(decryptedText)
+    }
+  }
+
+  def decryptWithAllKeys_hex(binaryCiphertext: String, keys: Array[(Double, Int)]): Unit = {
+    for( i <- 0 to 2){
+
+      // Decrypt using only one key size
+      val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(keys(i)._2, binaryCiphertext)
+      println(s"repeating key: $repeatingXORKey")
+
+      // Convert binary ciphertext to its decimal equivalent
+      val c = new C1
+      val decimalCiphertext = c
+        .splitStringIntoArray(binaryCiphertext, 8)
+        .map(Integer.parseInt(_, 2).toChar)
+        .mkString("")
+
+      println(s"ciphertext: $decimalCiphertext")
+
+      val charKey = c
+        .splitStringIntoArray(repeatingXORKey, 1)
+
+      // Decode the file contents with the key
+      val c5 = new C5
+      val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
+      val temp = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
+      //println(s"DECRYPTED: $temp")
 
       // Score the decrypted text
       val c3 = new C3
@@ -158,18 +204,9 @@ class C6 {
 
     // Convert the base 64 encoded text from the file to a binary string
     val binaryCiphertext = base64CiphertextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
-
-    // Decode the binary string to plaintext
-    val c = new C1
-    /*
-    val plaintext = c
-      .splitStringIntoArray(binaryCiphertext, 8)
-      .map(Integer.parseInt(_, 2))
-      .map(_.toChar)
-      .mkString("")
-    */
     
     // Convert binary ciphertext to its decimal equivalent
+    val c = new C1
     val decimalCiphertext = c
       .splitStringIntoArray(binaryCiphertext, 8)
       .map(Integer.parseInt(_, 2))
@@ -178,6 +215,6 @@ class C6 {
     // Get best key sizes
     val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, PriorityQueue[(Double, Int)]()).toArray
 
-    decryptWithAllKeys(binaryCiphertext, bestKeySizes)
+    decryptWithAllKeys_hex(binaryCiphertext, bestKeySizes)
   }
 }

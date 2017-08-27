@@ -48,9 +48,6 @@ class C5 {
     val xoredArray = applyRepeatingKeyToText(0, keyArray, textArray, Array[Int]())
     val xoredStr = xoredArray.mkString(" ")
 
-    //val len = xoredArray.length
-    //println(s"len: $len")
-
     convertDecimalArrayToHexString(0, xoredArray, "")
   }
 }
