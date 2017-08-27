@@ -134,12 +134,6 @@ class C6 {
 
   def decryptWithAllKeys(binaryCiphertext: String, keys: Array[(Double, Int)]): Unit = {
     for( i <- 0 to 2){
-      val temp = keys(i)._1
-      val temp2 = keys(i)._2
-      
-      //println(s"keys1: $temp")
-      //println(s"keys2: $temp2")
-
       // Decrypt using only one key size
       val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(keys(i)._2, binaryCiphertext)
       //println(s"repeatingKey: $repeatingXORKey")
@@ -178,7 +172,7 @@ class C6 {
         .map(Integer.parseInt(_, 2).toChar)
         .mkString("")
 
-      println(s"ciphertext: $decimalCiphertext")
+      //println(s"ciphertext: $decimalCiphertext")
 
       val charKey = c
         .splitStringIntoArray(repeatingXORKey, 1)
@@ -186,8 +180,7 @@ class C6 {
       // Decode the file contents with the key
       val c5 = new C5
       val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
-      val temp = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
-      //println(s"DECRYPTED: $temp")
+      val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
 
       // Score the decrypted text
       val c3 = new C3
@@ -201,6 +194,9 @@ class C6 {
 
     // Form a single string made up of the file contents
     val base64CiphertextList = fileLines.mkString("").toList
+    println(s"base64: $base64CiphertextList")
+    val temp = base64CiphertextList(0)
+    println(s"temp: $temp")
 
     // Convert the base 64 encoded text from the file to a binary string
     val binaryCiphertext = base64CiphertextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
