@@ -139,29 +139,6 @@ class C6 {
   }
 
   def decryptWithAllKeys(binaryCiphertext: String, keys: Array[(Double, Int)]): Unit = {
-    for( i <- 0 to 2){
-      // Decrypt using only one key size
-      val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(keys(i)._2, binaryCiphertext)
-
-      // Convert binary ciphertext to its decimal equivalent
-      val c = new C1
-      val decimalCiphertext = c
-        .splitStringIntoArray(binaryCiphertext, 8)
-        .map(Integer.parseInt(_, 2))
-        .mkString("")
-
-      // Decode the file contents with the key
-      val c5 = new C5
-      val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
-      //println(s"DECRYPTED: $decryptedText")
-
-      // Score the decrypted text
-      val c3 = new C3
-      val score = c3.scorePlaintext(decryptedText)
-    }
-  }
-
-  def decryptWithAllKeys_hex(binaryCiphertext: String, keys: Array[(Double, Int)]): Unit = {
     for( i <- 0 until keys.length){
 
       // Decrypt using only one key size
@@ -174,8 +151,6 @@ class C6 {
         .splitStringIntoArray(binaryCiphertext, 8)
         .map(Integer.parseInt(_, 2).toChar)
         .mkString("")
-
-      //println(s"ciphertext: $decimalCiphertext")
 
       val charKey = c
         .splitStringIntoArray(repeatingXORKey, 1)
@@ -212,6 +187,6 @@ class C6 {
     // Get best key sizes
     val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, PriorityQueue[(Double, Int)]()).toArray
 
-    decryptWithAllKeys_hex(binaryCiphertext, bestKeySizes)
+    decryptWithAllKeys(binaryCiphertext, bestKeySizes)
   }
 }
