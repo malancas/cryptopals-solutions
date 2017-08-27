@@ -109,13 +109,6 @@ class C6 {
     repeatingXORKeytemp
   }
 
-  def getLinesFromFile(): List[String] = {
-    Source
-      .fromResource("6.txt")
-      .getLines
-      .toList
-  }
-
   def convertBase64DigitToBinaryString(base64Digit: Char): String = {
     val decimalEquivalent = base64Digit.toInt
     if (65 <= decimalEquivalent && decimalEquivalent <= 90) {
@@ -195,6 +188,13 @@ class C6 {
       val c3 = new C3
       val score = c3.scorePlaintext(decryptedText)
     }
+  }
+
+  def getLinesFromFile(): List[String] = {
+    Source
+      .fromResource("6.txt")
+      .getLines
+      .toList
   }
 
   def decryptFile(): Unit = {
