@@ -123,13 +123,8 @@ class C6 {
 
     // Solve each block like it is a single character XOR
     val c3 = new C3
-
-    val repeatingXORKeytemp = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_).toChar).mkString(" ")
-    val repeatingXORKeytemp2 = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_)).mkString(" ")    
-    val repeatingXORKey = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_)).mkString("") 
-
-    println(s"repeating key: $repeatingXORKey")
-    println(s"repeating key temp: $repeatingXORKeytemp2")
+   
+    val repeatingXORKey = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_).toChar).mkString("") 
     
     repeatingXORKey
   }
@@ -143,17 +138,19 @@ class C6 {
 
       // Convert binary ciphertext to its decimal equivalent
       val c = new C1
-      val decimalCiphertext = c
+      val characterCiphertext = c
         .splitStringIntoArray(binaryCiphertext, 8)
         .map(Integer.parseInt(_, 2).toChar)
         .mkString("")
+
+      println(s"ciphertext: $characterCiphertext")
 
       val charKey = c
         .splitStringIntoArray(repeatingXORKey, 1)
 
       // Decode the file contents with the key
       val c5 = new C5
-      val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
+      val decryptedText = c5.encodeStringWithRepeatingKeyXOR(characterCiphertext, repeatingXORKey)
       val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
       //println(s"DECRYPTED: $decryptedText2")
 
