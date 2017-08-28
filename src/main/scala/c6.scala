@@ -89,11 +89,13 @@ class C6 {
     val hexCiphertext = c5.convertDecimalArrayToHexString(0, decimalCipherArray, "")
 
     // Group the numbers into keySize length chunks
-    val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
+    //val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
+    val textBlocks = decimalCipherArray.grouped(keySize).toArray
     val textBlocks2 = textBlocks.map(_.map(_.toInt)).map(c5.convertDecimalArrayToHexString(0, _, ""))
+    val textBlocks3 = textBlocks2.map(c1.splitStringIntoArray(_, 2))
 
     // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc
-    val transposedBlocks = textBlocks.transpose.map(_.mkString(""))
+    val transposedBlocks = textBlocks3.transpose.map(_.mkString(""))
 
     // Solve each block like it is a single character XOR
     val c3 = new C3
@@ -153,7 +155,7 @@ class C6 {
       val c5 = new C5
       val decryptedText = c5.encodeStringWithRepeatingKeyXOR(decimalCiphertext, repeatingXORKey)
       val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
-      println(s"DECRYPTED: $decryptedText2")
+      //println(s"DECRYPTED: $decryptedText2")
 
       // Score the decrypted text
       val c3 = new C3
