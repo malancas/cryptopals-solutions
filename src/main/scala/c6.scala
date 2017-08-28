@@ -8,6 +8,30 @@ import c3.C3
 import c5.C5
 
 class C6 {
+  def convertBase64DigitToBinaryString(base64Digit: Char): String = {
+    val decimalEquivalent = base64Digit.toInt
+    if (65 <= decimalEquivalent && decimalEquivalent <= 90) {
+      (decimalEquivalent - 65).toBinaryString
+    }
+    else if (97 <= decimalEquivalent && decimalEquivalent <= 122) {
+      (decimalEquivalent - 71).toBinaryString
+    }
+    else if (48 <= decimalEquivalent && decimalEquivalent <= 57) {
+      (decimalEquivalent + 4).toBinaryString
+    }
+    else if (decimalEquivalent == 43){
+      (decimalEquivalent + 19).toBinaryString
+    }
+    else { // decimalEquivalent == 47
+      (decimalEquivalent + 16).toBinaryString
+    }
+  }
+
+  def convertBase64DigitToSixDigitBinaryString(base64Digit: Char): String = {
+    val binaryString = convertBase64DigitToBinaryString(base64Digit)
+    "0" * (6 - binaryString.length) + binaryString
+  }
+
   def toBinary(i: Int): String = {
     // Append zeroes to the binary string so it's eight characters long
     val binaryString = i.toBinaryString
@@ -102,36 +126,12 @@ class C6 {
 
     val repeatingXORKeytemp = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_).toChar).mkString(" ")
     val repeatingXORKeytemp2 = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_)).mkString(" ")    
-    val repeatingXORKey = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_).toChar).mkString("") 
+    val repeatingXORKey = transposedBlocks.map(c3.breakHexCipherSingleByteXORCipher(_)).mkString("") 
 
     println(s"repeating key: $repeatingXORKey")
     println(s"repeating key temp: $repeatingXORKeytemp2")
     
     repeatingXORKey
-  }
-
-  def convertBase64DigitToBinaryString(base64Digit: Char): String = {
-    val decimalEquivalent = base64Digit.toInt
-    if (65 <= decimalEquivalent && decimalEquivalent <= 90) {
-      (decimalEquivalent - 65).toBinaryString
-    }
-    else if (97 <= decimalEquivalent && decimalEquivalent <= 122) {
-      (decimalEquivalent - 71).toBinaryString
-    }
-    else if (48 <= decimalEquivalent && decimalEquivalent <= 57) {
-      (decimalEquivalent + 4).toBinaryString
-    }
-    else if (decimalEquivalent == 43){
-      (decimalEquivalent + 19).toBinaryString
-    }
-    else { // decimalEquivalent == 47
-      (decimalEquivalent + 16).toBinaryString
-    }
-  }
-
-  def convertBase64DigitToSixDigitBinaryString(base64Digit: Char): String = {
-    val binaryString = convertBase64DigitToBinaryString(base64Digit)
-    "0" * (6 - binaryString.length) + binaryString
   }
 
   def decryptWithAllKeys(binaryCiphertext: String, keys: Array[(Double, Int)]): Unit = {
