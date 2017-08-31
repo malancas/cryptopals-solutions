@@ -209,37 +209,47 @@ class C6 {
     repeatingXORKey
   }
 
-  def decryptWithAllKeys(binaryCiphertext: String, keys: Array[Int]): Unit = {
-    for (i <- 0 until keys.length){
+  def decryptWithAllKeys(binaryCiphertext: String, keys: List[Int], currBestDecryptedText: String, currBestScore: Double): String = {
+    keys match {
+      case h :: t => {
+        // Decrypt using only one key size
+        val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(h, binaryCiphertext)
+        //println(s"repeating key: $repeatingXORKey")
 
-      // Decrypt using only one key size
-      val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(keys(i), binaryCiphertext)
-      //println(s"repeating key: $repeatingXORKey")
+        // Convert binary ciphertext to its decimal equivalent
+        val c = new C1
+        val characterCiphertext = c
+          .splitStringIntoArray(binaryCiphertext, 8)
+          .map(Integer.parseInt(_, 2).toChar)
+          .mkString("")
 
-      // Convert binary ciphertext to its decimal equivalent
-      val c = new C1
-      val characterCiphertext = c
-        .splitStringIntoArray(binaryCiphertext, 8)
-        .map(Integer.parseInt(_, 2).toChar)
-        .mkString("")
+        //println(s"ciphertext: $characterCiphertext")
 
-      //println(s"ciphertext: $characterCiphertext")
+        val charKey = c
+          .splitStringIntoArray(repeatingXORKey, 1)
 
-      val charKey = c
-        .splitStringIntoArray(repeatingXORKey, 1)
+        // Decode the file contents with the key
+        val c5 = new C5
+        val decryptedText = c5.encodeStringWithRepeatingKeyXOR(characterCiphertext, repeatingXORKey)
+        val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
+        //println(s"DECRYPTED: $decryptedText2")
 
-      // Decode the file contents with the key
-      val c5 = new C5
-      val decryptedText = c5.encodeStringWithRepeatingKeyXOR(characterCiphertext, repeatingXORKey)
-      val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
-      //println(s"DECRYPTED: $decryptedText2")
-
-      // Score the decrypted text
-      val c3 = new C3
-      val score = c3.scorePlaintext(decryptedText)
-      println(s"score: $score")
-      val keysize = keys(i)
-      println(s"keysize: $keysize \n")
+        // Score the decrypted text
+        val c3 = new C3
+        val score = c3.scorePlaintext(decryptedText)
+        println(s"score: $score")
+        val keysize = h
+        println(s"keysize: $keysize \n")
+        if (score < currBestScore){
+          decryptWithAllKeys(binaryCiphertext, t, decryptedText2, score)
+        }
+        else {
+          decryptWithAllKeys(binaryCiphertext, t, currBestDecryptedText, currBestScore)          
+        }
+      }
+      case Nil => {
+        currBestDecryptedText
+      }
     }
   }
 
@@ -264,13 +274,14 @@ class C6 {
     //val minHeap = PriorityQueue.empty(Ordering[Double].r‌​everse)
     val minHeap = scala.collection.mutable.PriorityQueue.empty(Ordering[Double]).reverse
     val hamDistMap = HashMap[Double, Array[Int]]()
-    val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, minHeap, hamDistMap)
+    val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, minHeap, hamDistMap).toList
     val len = bestKeySizes.length
     println(s"key length: $len")
     
     //val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, PriorityQueue[HammingDistKeySizeCount]()(Ordering.by(hamDistOrder))).toArray
     //val temp = bestKeySizes.map(element => element._2).flatten
 
-    decryptWithAllKeys(binaryCiphertext, bestKeySizes)
+    val decryptedText = decryptWithAllKeys(binaryCiphertext, bestKeySizes, "", Double.MaxValue)
+    println(decryptedText)
   }
 }
