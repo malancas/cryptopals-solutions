@@ -4,6 +4,7 @@ import c3.C3
 import c4.C4
 import c5.C5
 import c6.C6
+import ctest.CTest
 
 object MainModel {
   def main(args: Array[String]): Unit = {
@@ -61,5 +62,10 @@ object MainModel {
     // Challenge 6
     val c6 = new C6
     c6.decryptFile()
+    println(c6.getHammingDistanceBetweenText("this is a test", "wokka wokka!!!"))
+  
+    // Test
+    val ctest = new CTest
+    ctest.decryptTest()
   }
 }
