@@ -117,15 +117,13 @@ class C6 {
     val decimalCipherArray = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2))
     val decimalCiphertext = c1.splitStringIntoArray(binaryCiphertext, 8).map(Integer.parseInt(_, 2)).mkString("")
 
-    val hexCiphertext = c5.convertDecimalArrayToHexString(0, decimalCipherArray, "")
-
     // Group the numbers into keySize length chunks
-    val textBlocks = decimalCipherArray.grouped(keySize).toArray
-    val textBlocks2 = textBlocks.map(_.map(_.toInt)).map(c5.convertDecimalArrayToHexString(0, _, ""))
-    val textBlocks3 = textBlocks2.map(c1.splitStringIntoArray(_, 2))
+    val keySizeGroupedTextBlocks = decimalCipherArray.grouped(keySize).toArray
+    val hexTextBlocks = keySizeGroupedTextBlocks.map(_.map(_.toInt)).map(c5.convertDecimalArrayToHexString(0, _, ""))
+    val hexArrayTextBlocks = hexTextBlocks.map(c1.splitStringIntoArray(_, 2))
 
     // Transpose blocks. Make a block that is the first byte of every block, another block that is every second byte, etc
-    val transposedBlocks = textBlocks3.transpose.map(_.mkString(""))
+    val transposedBlocks = hexArrayTextBlocks.transpose.map(_.mkString(""))
 
     // Solve each block like it is a single character XOR
     val c3 = new C3
