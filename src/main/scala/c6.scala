@@ -168,9 +168,7 @@ class C6 {
         // Score the decrypted text
         val c3 = new C3
         val score = c3.scorePlaintext(decryptedText)
-        println(s"score: $score")
         val keysize = h
-        println(s"keysize: $keysize \n")
         if (score < currBestScore){
           decryptWithAllKeys(binaryCiphertext, t, decryptedText2, score)
         }
