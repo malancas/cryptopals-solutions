@@ -205,6 +205,5 @@ class C6 {
     val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, minHeap, hamDistMap).toList
     
     val decryptedText = decryptWithAllKeys(binaryCiphertext, bestKeySizes, "", Double.MaxValue)
-    println(decryptedText)
   }
 }

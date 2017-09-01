@@ -4,7 +4,6 @@ import c3.C3
 import c4.C4
 import c5.C5
 import c6.C6
-import ctest.CTest
 
 object MainModel {
   def main(args: Array[String]): Unit = {
