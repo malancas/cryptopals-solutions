@@ -73,7 +73,7 @@ class C6 {
   }
 
   @tailrec
-  final def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, 
+  final def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, characterCiphertext: String,
     smallestHammingDistances: PriorityQueue[Double], hammingDistMap: Map[Double, Array[Int]]): Array[Int] = {
     if (keySize == 41 || binaryCiphertext.length < keySize * 2){
       // Copy the three smallest sizes to an array
@@ -84,13 +84,6 @@ class C6 {
       smallestHammingDistances.map(hammingDistMap(_)).toArray.flatten
     }
     else {
-      // Make characterCiphertext
-      val c = new C1
-      val characterCiphertext = c
-        .splitStringIntoArray(binaryCiphertext, 8)
-        .map(Integer.parseInt(_, 2).toChar)
-        .mkString("")
-
       // Get the first two substrings of length keySize
       val cipherSubstring0 = characterCiphertext.substring(0, keySize)
       val cipherSubstring1 = characterCiphertext.substring(keySize, keySize * 2)
@@ -100,11 +93,11 @@ class C6 {
         // Update the corresponding array to include the current key size
         val newKeySizeArray = hammingDistMap(hamDistance) ++ Array(keySize)
         val tempMap = hammingDistMap - (hamDistance)
-        getThreeBestKeySizes(keySize + 1, binaryCiphertext, smallestHammingDistances, tempMap ++ HashMap(hamDistance -> newKeySizeArray))
+        getThreeBestKeySizes(keySize + 1, binaryCiphertext, characterCiphertext, smallestHammingDistances, tempMap ++ HashMap(hamDistance -> newKeySizeArray))
       }
       else {
         smallestHammingDistances.enqueue(hamDistance)
-        getThreeBestKeySizes(keySize + 1, binaryCiphertext, smallestHammingDistances, hammingDistMap ++ HashMap(hamDistance -> Array(keySize)))        
+        getThreeBestKeySizes(keySize + 1, binaryCiphertext, characterCiphertext, smallestHammingDistances, hammingDistMap ++ HashMap(hamDistance -> Array(keySize)))        
       }
     }
   }
@@ -197,7 +190,13 @@ class C6 {
     val hamDistMap = HashMap[Double, Array[Int]]()
 
     // Get the three best key sizes
-    val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, minHeap, hamDistMap).toList
+    val c = new C1
+    val characterCiphertext = c
+      .splitStringIntoArray(binaryCiphertext, 8)
+      .map(Integer.parseInt(_, 2).toChar)
+      .mkString("")
+      
+    val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, characterCiphertext, minHeap, hamDistMap).toList
     
     val decryptedText = decryptWithAllKeys(binaryCiphertext, bestKeySizes, "", Double.MaxValue)
   }
