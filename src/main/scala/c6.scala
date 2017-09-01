@@ -110,13 +110,6 @@ class C6 {
   }
 
   def getRepeatingKeyXORWithChosenKeySize(keySize: Int, binaryCiphertext: String): String = {
-    // For each key
-      // 1. Solve each transposed block like a single character XOR
-      // 2. Find the correct key for each block
-      // 3. Put these keys together to get the correct key and decrypt the file
-      // 4. Get the score for each decrypted file text
-      // 5. Return the plain text with the best score
-
     val c1 = new C1
     val c5 = new C5
 
