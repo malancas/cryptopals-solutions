@@ -65,7 +65,6 @@ class C6 {
 
   def getNormalizedHammingDistanceBetweenText(str0: String, str1: String, keySize: Int): Double = {
     // Divide the hamming distance by keySize to normalize it
-    //getHammingDistanceBetweenText(str0, str1).toDouble / keySize
     getHammingDistanceBetweenText(str0, str1) / keySize  
   }
 
@@ -73,76 +72,11 @@ class C6 {
     getHammingDistanceBetweenBinaryStrings(bin0, bin1)
   }
 
-  /*
-  @tailrec
-  final def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, 
-  smallestHammingDistances: PriorityQueue[HammingDistKeySizeCount]): Array[Int] = {
-    if (keySize == 41 || binaryCiphertext.length < keySize * 2){
-      smallestHammingDistances.toArray.map(_.getKeySizes).flatten
-    }
-    else {
-      // Make characterCiphertext
-      val c = new C1
-      val characterCiphertext = c
-        .splitStringIntoArray(binaryCiphertext, 8)
-        .map(Integer.parseInt(_, 2).toChar)
-        .mkString("")
-
-      // Get the first two substrings of length keySize
-      val cipherSubstring0 = characterCiphertext.substring(0, keySize)
-      val cipherSubstring1 = characterCiphertext.substring(keySize, keySize * 2)
-
-      val hamDistance = getNormalizedHammingDistanceBetweenText(cipherSubstring0, cipherSubstring1, keySize)
-      println(s"ham Distance: $hamDistance")
-      println(s"key size: $keySize")
-
-      if (smallestHammingDistances.length < 3){
-        if (!smallestHammingDistances.isEmpty && hamDistance == smallestHammingDistances.head.getHammingDistance) {
-          val newKeySizeArray = smallestHammingDistances.head.getKeySizes ++ Array(keySize)
-          val newHamDistCount = new HammingDistKeySizeCount(smallestHammingDistances.head.getHammingDistance, newKeySizeArray)
-          smallestHammingDistances.enqueue(newHamDistCount)
-        }
-        smallestHammingDistances.enqueue(HammingDistKeySizeCount(hamDistance, Array(keySize)))
-        getThreeBestKeySizes(keySize + 1, binaryCiphertext, smallestHammingDistances)
-      }
-      else if (hamDistance < smallestHammingDistances.head.getHammingDistance){
-        while (!smallestHammingDistances.isEmpty && hamDistance < smallestHammingDistances.head.getHammingDistance){
-          smallestHammingDistances.dequeue
-        }
-        
-        if (!smallestHammingDistances.isEmpty && hamDistance == smallestHammingDistances.head.getHammingDistance){
-          val newKeySizeArray = smallestHammingDistances.head.getKeySizes ++ Array(keySize)
-          val newHamDistCount = new HammingDistKeySizeCount(smallestHammingDistances.head.getHammingDistance, newKeySizeArray)
-          smallestHammingDistances.enqueue(newHamDistCount)
-        }
-        else {
-          smallestHammingDistances.enqueue(HammingDistKeySizeCount(hamDistance, Array(keySize)))
-        }
-        
-        getThreeBestKeySizes(keySize + 1, binaryCiphertext, smallestHammingDistances)
-      }
-      else if (hamDistance == smallestHammingDistances.head.getHammingDistance){
-        val newKeySizeArray = smallestHammingDistances.head.getKeySizes ++ Array(keySize)
-        val newHamDistCount = new HammingDistKeySizeCount(smallestHammingDistances.head.getHammingDistance, newKeySizeArray)
-        
-        smallestHammingDistances.dequeue
-        smallestHammingDistances.enqueue(newHamDistCount)
-
-        getThreeBestKeySizes(keySize + 1, binaryCiphertext, smallestHammingDistances)        
-      }
-      else {
-        getThreeBestKeySizes(keySize + 1, binaryCiphertext, smallestHammingDistances)
-      }
-    }
-  }
-  */
   @tailrec
   final def getThreeBestKeySizes(keySize: Int, binaryCiphertext: String, 
     smallestHammingDistances: PriorityQueue[Double], hammingDistMap: Map[Double, Array[Int]]): Array[Int] = {
     if (keySize == 41 || binaryCiphertext.length < keySize * 2){
       // Copy the three smallest sizes to an array
-      //val smallestKeySizes = Array[Int]()
-      //smallestHammingDistances.copyToArray(smallestKeySizes, 0, 3)
       smallestHammingDistances.toArray.slice(0,3)
 
       // Get the corresponding key sizes from the map and return them
@@ -193,7 +127,6 @@ class C6 {
     val hexCiphertext = c5.convertDecimalArrayToHexString(0, decimalCipherArray, "")
 
     // Group the numbers into keySize length chunks
-    //val textBlocks = decimalCiphertext.grouped(keySize).toArray.map(c1.splitStringIntoArray(_, 1))
     val textBlocks = decimalCipherArray.grouped(keySize).toArray
     val textBlocks2 = textBlocks.map(_.map(_.toInt)).map(c5.convertDecimalArrayToHexString(0, _, ""))
     val textBlocks3 = textBlocks2.map(c1.splitStringIntoArray(_, 2))
@@ -214,7 +147,6 @@ class C6 {
       case h :: t => {
         // Decrypt using only one key size
         val repeatingXORKey = getRepeatingKeyXORWithChosenKeySize(h, binaryCiphertext)
-        //println(s"repeating key: $repeatingXORKey")
 
         // Convert binary ciphertext to its decimal equivalent
         val c = new C1
@@ -232,7 +164,6 @@ class C6 {
         val c5 = new C5
         val decryptedText = c5.encodeStringWithRepeatingKeyXOR(characterCiphertext, repeatingXORKey)
         val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
-        //println(s"DECRYPTED: $decryptedText2")
 
         // Score the decrypted text
         val c3 = new C3
@@ -271,16 +202,10 @@ class C6 {
     val binaryCiphertext = base64CiphertextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
 
     // Get best key sizes
-    //val minHeap = PriorityQueue.empty(Ordering[Double].r‌​everse)
     val minHeap = scala.collection.mutable.PriorityQueue.empty(Ordering[Double]).reverse
     val hamDistMap = HashMap[Double, Array[Int]]()
     val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, minHeap, hamDistMap).toList
-    val len = bestKeySizes.length
-    println(s"key length: $len")
     
-    //val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, PriorityQueue[HammingDistKeySizeCount]()(Ordering.by(hamDistOrder))).toArray
-    //val temp = bestKeySizes.map(element => element._2).flatten
-
     val decryptedText = decryptWithAllKeys(binaryCiphertext, bestKeySizes, "", Double.MaxValue)
     println(decryptedText)
   }
