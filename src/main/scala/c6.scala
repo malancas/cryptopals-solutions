@@ -155,15 +155,15 @@ class C6 {
 
         // Decode the file contents with the key
         val c5 = new C5
-        val decryptedText = c5.encodeStringWithRepeatingKeyXOR(characterCiphertext, repeatingXORKey)
-        val decryptedText2 = c.splitStringIntoArray(decryptedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
+        val keyEncodedText = c5.encodeStringWithRepeatingKeyXOR(characterCiphertext, repeatingXORKey)
+        val decryptedText = c.splitStringIntoArray(keyEncodedText, 2).map(Integer.parseInt(_, 16).toChar).mkString("")
 
         // Score the decrypted text
         val c3 = new C3
-        val score = c3.scorePlaintext(decryptedText)
+        val score = c3.scorePlaintext(keyEncodedText)
         val keysize = h
         if (score < currBestScore){
-          decryptWithAllKeys(binaryCiphertext, t, decryptedText2, score)
+          decryptWithAllKeys(binaryCiphertext, t, decryptedText, score)
         }
         else {
           decryptWithAllKeys(binaryCiphertext, t, currBestDecryptedText, currBestScore)          
