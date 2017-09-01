@@ -192,9 +192,13 @@ class C6 {
     // Convert the base 64 encoded text from the file to a binary string
     val binaryCiphertext = base64CiphertextList.map(convertBase64DigitToSixDigitBinaryString(_)).mkString("")
 
-    // Get best key sizes
+    // Create min heap to keep track of the smallest hamming distances
     val minHeap = scala.collection.mutable.PriorityQueue.empty(Ordering[Double]).reverse
+
+    // A hash map used to keep track of which key sizes produce which hamming distances
     val hamDistMap = HashMap[Double, Array[Int]]()
+
+    // Get the three best key sizes
     val bestKeySizes = getThreeBestKeySizes(2, binaryCiphertext, minHeap, hamDistMap).toList
     
     val decryptedText = decryptWithAllKeys(binaryCiphertext, bestKeySizes, "", Double.MaxValue)
