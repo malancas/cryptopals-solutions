@@ -46,7 +46,6 @@ object MainModel {
     println("Challenge 4 passed")
 
     // Challenge 5
-    val plaintext0 = "Burning 'em, if you ain't quick and nimble"
     val plaintext = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
     val key = "ICE"
 
