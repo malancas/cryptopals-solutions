@@ -4,17 +4,16 @@ package c2
 
 import c1.C1
 
-class C2 {
+object C2 {
   def convertHexArrayToDecimalArray(hexArray: Array[String]): Array[Int] = {
     // Convert each hex element to its decimal equivalent
     hexArray.map(Integer.parseInt(_, 16))
   }
 
   def getFixedXORofHexBuffers(hexBuffer0: String, hexBuffer1: String): String = {
-    val c = new C1
     // Convert each hex string to an array equivalent
-    val hexArray0 = c.splitStringIntoArray(hexBuffer0, 2)
-    val hexArray1 = c.splitStringIntoArray(hexBuffer1, 2)
+    val hexArray0 = C1.splitStringIntoArray(hexBuffer0, 2)
+    val hexArray1 = C1.splitStringIntoArray(hexBuffer1, 2)
 
     // Convert each element of the hex array to their decimal equivalents
     val decimalArray0 = convertHexArrayToDecimalArray(hexArray0)
@@ -28,5 +27,9 @@ class C2 {
 
     // Make a string from the hex array
     hexArray.mkString("")
+  }
+
+  def solution(hexBuffer0: String, hexBuffer1: String): String = {
+    getFixedXORofHexBuffers(hexBuffer0, hexBuffer1)
   }
 }

@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 import c1.C1
 import c2.C2
 
-class C3 {
+object C3 {
   val referenceMap = Map('a' -> 0.0651738, 'b' -> 0.0124248, 'c' -> 0.0217339, 'd' -> 0.0349835,
     'e' -> 0.1041442, 'f' -> 0.0197881, 'g' -> 0.0158610, 'h' -> 0.0492888, 'i' -> 0.0558094,
     'j' -> 0.0009033, 'k' -> 0.0050529, 'l' -> 0.0331490, 'm' -> 0.0202124, 'n' -> 0.0564513,
@@ -35,9 +35,7 @@ class C3 {
 
   // Decode a hex string to a plaintext string using a key
   def decodeHexStringWithKey(hexStr: String, key: Int): String = {
-    val c1 = new C1
-
-    c1.splitStringIntoArray(hexStr, 2)
+    C1.splitStringIntoArray(hexStr, 2)
       .map(Integer.parseInt(_, 16))
       .map(_ ^ key)
       .map(_.toChar)
@@ -71,14 +69,15 @@ class C3 {
 
   def breakHexCipherSingleByteXORCipher(hexStr: String): Int = {
     // Get the an array containing the decimal conversions of each hex digit
-    val c1 = new C1
-    val c2 = new C2
-
-    val hexArray = c1.splitStringIntoArray(hexStr, 2)
-    val decimalArray = c2.convertHexArrayToDecimalArray(hexArray)
+    val hexArray = C1.splitStringIntoArray(hexStr, 2)
+    val decimalArray = C2.convertHexArrayToDecimalArray(hexArray)
 
     // Try xoring with each possible character and score the plaint text
     val (bestKey, bestScore) = findBestKey(decimalArray, 0, Double.MinValue, 0)
     bestKey
+  }
+
+  def solution(hexStr: String): Int = {
+    breakHexCipherSingleByteXORCipher(hexStr)
   }
 }

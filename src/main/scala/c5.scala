@@ -2,7 +2,7 @@ package c5
 
 import scala.annotation.tailrec
 
-class C5 {
+object C5 {
   // If the digit is less than 16, 0 must be added
   // to the beginning of the hex representation
   def convertDecimalToHex(digit: Int): String = {
@@ -49,5 +49,9 @@ class C5 {
     val xoredStr = xoredArray.mkString(" ")
 
     convertDecimalArrayToHexString(0, xoredArray, "")
+  }
+
+  def solution(plaintext: String, key: String): String = {
+    encodeStringWithRepeatingKeyXOR(plaintext, key)
   }
 }

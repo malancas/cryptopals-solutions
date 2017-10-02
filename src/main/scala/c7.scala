@@ -4,9 +4,7 @@ import javax.crypto._
 import c6.C6
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
-class C7 {
-  val c6 = new C6
-
+object C7 {
   // val encryptedTextMatrix = DenseMatrix(4, 4, encryptedTextBlock)
   // val roundKeyMatrix = DenseMatrix(4, 4, roundKey)
 

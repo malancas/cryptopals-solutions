@@ -5,15 +5,11 @@ import c1.C1
 import c2.C2
 import c3.C3
 
-class C4 {
-  val c1 = new C1
-  val c2 = new C2
-  val c3 = new C3
-
+object C4 {
   // Returns an array containing each line from 4.txt as separate elements
-  def getLinesFromFile(): List[String] = {
+  def getLinesFromFile(fileName: String): List[String] = {
     Source
-      .fromResource("4.txt")
+      .fromResource(fileName)
       .getLines
       .toList
   }
@@ -23,9 +19,9 @@ class C4 {
     // Use this to get the lowest plain text score
     lines match {
       case h :: t => {
-        val hArray = c1.splitStringIntoArray(h, 2)
-        val decimalArray = c2.convertHexArrayToDecimalArray(hArray)
-        val (lineKey, lineScore) = c3.findBestKey(decimalArray, 0, Double.MinValue, 0)
+        val hArray = C1.splitStringIntoArray(h, 2)
+        val decimalArray = C2.convertHexArrayToDecimalArray(hArray)
+        val (lineKey, lineScore) = C3.findBestKey(decimalArray, 0, Double.MinValue, 0)
 
         if (lineScore > bestScore){
           val decoded = decimalArray
@@ -47,10 +43,14 @@ class C4 {
 
   def detectSingleCharacterXOR(): String = {
     // Open the file and get a list of the lines
-    val lines = getLinesFromFile()
+    val lines = getLinesFromFile("4.txt")
 
     val xoredLine = getSingleCharXORLineFromLines(lines, "", Double.MinValue, 0)
     
     xoredLine
+  }
+
+  def solution(): String = {
+    detectSingleCharacterXOR()
   }
 }

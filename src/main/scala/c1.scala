@@ -1,6 +1,6 @@
 package c1
 
-class C1 {
+object C1 {
   def splitStringIntoArray(str: String, n: Int): Array[String] = {
     // This regex will split after every nth character
     // in the string. The number of dots signify
@@ -56,5 +56,9 @@ class C1 {
 
     // Make a string from the base 64 array
     base64Array.mkString("")
+  }
+
+  def solution(hexStr: String): String = {
+    convertHexStringtoBase64String(hexStr)
   }
 }
