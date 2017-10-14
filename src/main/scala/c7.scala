@@ -1,23 +1,31 @@
 package c7
 
-import javax.crypto._
+import javax.crypto.spec.SecretKeySpec
+import javax.crypto.Cipher
+import scala.io.Source
+import java.util.Base64
 import c6.C6
+import c4.C4
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
+// Base64.getEncoder.encodeToString("user:pass".getBytes(StandardCharsets.UTF_8))
 object C7 {
-  // val encryptedTextMatrix = DenseMatrix(4, 4, encryptedTextBlock)
-  // val roundKeyMatrix = DenseMatrix(4, 4, roundKey)
-
-  /*
-  For each row in the text block, shift 1 more to the left
-  than in the above row such that the first row shifts 0 times
-  the second row shifts 1 time, the third shifts 2 two times, etc.
-  */
-  /*
-  def shiftRows(encryptedTextBlock: DenseMatrix[String]): DenseMatrix[String] = {
-
+  def decrypt(encryptedText: String, secret: String): String = {
+      val secretKey = new SecretKeySpec(secret.getBytes("UTF-8"), "AES")
+      val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+      cipher.init(Cipher.DECRYPT_MODE, secretKey)
+      //val decodedBase64 = Base64.getDecoder.decode(encryptedText)
+      new String(cipher.doFinal(Base64.getDecoder.decode(encryptedText)))  
   }
 
+  def solution(): String = {
+    val encryptedText = Source.fromResource("7.txt").getLines.mkString("")
+    val key = "YELLOW SUBMARINE"
+    decrypt(encryptedText, key)
+  }
+}
+  
+  /*
   
   -Each column of the encrypted text is xored with the 
    corresponding row of the round key
@@ -128,8 +136,3 @@ object C7 {
     println(plaintext)
   }
   */
-
-  def solution(): String = {
-    "nothing yet"
-  }
-}

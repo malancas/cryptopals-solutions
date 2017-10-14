@@ -4,6 +4,7 @@ import c3.C3
 import c4.C4
 import c5.C5
 import c6.C6
+import c7.C7
 
 object MainModel {
   def main(args: Array[String]): Unit = {
@@ -54,5 +55,9 @@ object MainModel {
     // Challenge 6
     C6.decryptFile()
     println("Challenge 6 passed")
+
+    // Challenge 7
+    println(C7.solution())
+    println("Challenge 7 passed")
   }
 }
