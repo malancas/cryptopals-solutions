@@ -10,13 +10,13 @@ object C8 {
     else ""
   }
 
-  def detectECB(encryptedText: Array[String]): Unit = {
-    val stuff = encryptedText.map(areThereRepetitions(_)).filterNot(word => word.isEmpty)
-    println(stuff.length)
+  def detectECB(encryptedText: Array[String]): Array[String] = {
+    val ecbEncoded = encryptedText.map(areThereRepetitions(_)).filterNot(word => word.isEmpty)
+    ecbEncoded
   }
 
   def solution(): Unit = {
     val encryptedText = Source.fromResource("8.txt").getLines.toArray
-    detectECB(encryptedText)
+    assert(detectECB(encryptedText).length > 0)
   }
 }
