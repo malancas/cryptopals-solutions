@@ -8,14 +8,13 @@ import c6.C6
 import c4.C4
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
-// Base64.getEncoder.encodeToString("user:pass".getBytes(StandardCharsets.UTF_8))
+
 object C7 {
   def decrypt(encryptedText: String, secret: String): String = {
-      val secretKey = new SecretKeySpec(secret.getBytes("UTF-8"), "AES")
-      val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
-      cipher.init(Cipher.DECRYPT_MODE, secretKey)
-      //val decodedBase64 = Base64.getDecoder.decode(encryptedText)
-      new String(cipher.doFinal(Base64.getDecoder.decode(encryptedText)))  
+    val secretKey = new SecretKeySpec(secret.getBytes("UTF-8"), "AES")
+    val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+    cipher.init(Cipher.DECRYPT_MODE, secretKey)
+    new String(cipher.doFinal(Base64.getDecoder.decode(encryptedText)))  
   }
 
   def solution(): String = {

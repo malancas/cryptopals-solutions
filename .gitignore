@@ -1,5 +1,4 @@
 target/
 *.class
-4.txt
-6.txt
+*.txt
 *.scala~
