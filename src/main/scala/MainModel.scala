@@ -6,6 +6,7 @@ import c5.C5
 import c6.C6
 import c7.C7
 import c8.C8
+import c9.C9
 
 object MainModel {
   def main(args: Array[String]): Unit = {
@@ -64,5 +65,9 @@ object MainModel {
     // Challenge 8
     C8.solution()
     println("Challenge 8 passed")
+
+    // Challenge 9
+    assert(C9.implementPKCS7Padding("YELLOW SUBMARINE", 20) == "YELLOW SUBMARINE\\x04\\x04\\x04\\x04")
+    println("Challenge 9 passed")
   }
 }

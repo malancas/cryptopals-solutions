@@ -1,7 +1,6 @@
 package c8
 
 import scala.io.Source
-import util.control.Breaks._
 
 object C8 {
   def areThereRepetitions(text: String): String = {
