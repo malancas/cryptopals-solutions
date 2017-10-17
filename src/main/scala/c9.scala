@@ -2,7 +2,8 @@ package c9
 
 object C9 {
   def implementPKCS7Padding(message: String, desiredLength: Int): String = {
-    val diff = desiredLength - message.length
+    val numBytes = message.getBytes("UTF-8")
+    val diff = desiredLength - numBytes.length
     if (diff <= 0){
       message
     }
