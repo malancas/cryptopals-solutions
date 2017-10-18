@@ -4,8 +4,6 @@ import javax.crypto.spec.SecretKeySpec
 import javax.crypto.Cipher
 import scala.io.Source
 import java.util.Base64
-import set1.c6.C6
-import set1.c4.C4
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 
