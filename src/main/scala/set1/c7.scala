@@ -1,11 +1,11 @@
-package c7
+package set1.c7
 
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.Cipher
 import scala.io.Source
 import java.util.Base64
-import c6.C6
-import c4.C4
+import set1.c6.C6
+import set1.c4.C4
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 

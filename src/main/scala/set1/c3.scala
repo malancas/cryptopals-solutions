@@ -1,8 +1,8 @@
-package c3
+package set1.c3
 
 import scala.annotation.tailrec
-import c1.C1
-import c2.C2
+import set1.c1.C1
+import set1.c2.C2
 
 object C3 {
   val referenceMap = Map('a' -> 0.0651738, 'b' -> 0.0124248, 'c' -> 0.0217339, 'd' -> 0.0349835,

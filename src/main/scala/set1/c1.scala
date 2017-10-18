@@ -1,4 +1,4 @@
-package c1
+package set1.c1
 
 object C1 {
   def splitStringIntoArray(str: String, n: Int): Array[String] = {

@@ -1,9 +1,9 @@
-package c4
+package set1.c4
 
 import scala.io.Source
-import c1.C1
-import c2.C2
-import c3.C3
+import set1.c1.C1
+import set1.c2.C2
+import set1.c3.C3
 
 object C4 {
   // Returns an array containing each line from 4.txt as separate elements

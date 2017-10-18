@@ -1,8 +1,8 @@
 // Write a function that takes two equal-length
 // buffers and produces the hex representation of their XOR combination
-package c2
+package set1.c2
 
-import c1.C1
+import set1.c1.C1
 
 object C2 {
   def convertHexArrayToDecimalArray(hexArray: Array[String]): Array[Int] = {

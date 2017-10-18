@@ -1,12 +1,12 @@
-import c1.C1
-import c2.C2
-import c3.C3
-import c4.C4
-import c5.C5
-import c6.C6
-import c7.C7
-import c8.C8
-import c9.C9
+import set1.c1.C1
+import set1.c2.C2
+import set1.c3.C3
+import set1.c4.C4
+import set1.c5.C5
+import set1.c6.C6
+import set1.c7.C7
+import set1.c8.C8
+import set2.c9.C9
 
 object MainModel {
   def main(args: Array[String]): Unit = {

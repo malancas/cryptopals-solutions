@@ -1,4 +1,4 @@
-package c8
+package set1.c8
 
 import scala.io.Source
 

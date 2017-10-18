@@ -1,4 +1,4 @@
-package c6
+package set1.c6
 
 import scala.io.Source
 import scala.collection.mutable.PriorityQueue
@@ -6,10 +6,10 @@ import scala.annotation.tailrec
 import scala.collection.immutable.HashMap
 import scala.math.Ordering
 import scala.util.Sorting
-import c1.C1
-import c3.C3
-import c4.C4
-import c5.C5
+import set1.c1.C1
+import set1.c3.C3
+import set1.c4.C4
+import set1.c5.C5
 
 object C6 {
   case class HammingDistKeySizeCount(hammingDistance: Double, keySizes: Array[Int]) {
