@@ -7,7 +7,7 @@ import set1.c6.C6
 import set1.c7.C7
 import set1.c8.C8
 import set2.c9.C9
-import set2.c10.C10
+import set2.c10.CBCMode
 
 object MainModel {
   def main(args: Array[String]): Unit = {
@@ -72,7 +72,12 @@ object MainModel {
     println("Challenge 9 passed")
 
     // Challenge 10
-    println(C10.solution())
+    val c10Key = "YELLOW SUBMARINE"
+    //val IV = "\\x00\\x00\\x00 &c"
+    val IV = Array.fill(16)(0)
+    val cbc = new CBCMode(IV, c10Key)
+
+    println(cbc.solution())
     println("Challenge 10 passed")
   }
 }
