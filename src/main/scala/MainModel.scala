@@ -73,7 +73,6 @@ object MainModel {
 
     // Challenge 10
     val c10Key = "YELLOW SUBMARINE"
-    //val IV = "\\x00\\x00\\x00 &c"
     val IV = Array.fill(16)(0)
     val cbc = new CBCMode(IV, c10Key)
 
