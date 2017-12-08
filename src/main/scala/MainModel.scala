@@ -77,7 +77,7 @@ object MainModel {
     val IV = Array.fill(16)(0)
     val cbc = new CBCMode(IV, c10Key)
 
-    println(cbc.solution())
+    println(cbc.solution)
     println("Challenge 10 passed")
   }
 }

@@ -32,8 +32,8 @@ class CBCMode(iv: Array[Int], key: String) {
       case h :: t => {
         // Process the first block
         val encryptedBlock = encryptBlock(h, cipherBlock)
-        val encryptedText = encryptedBlock.map(_.toChar).mkString("")
-        processTextBlocks(t, encryptedBlock, encryptedText + encryptedBlock)
+        val encryptedTextPortion = encryptedBlock.map(_.toChar).mkString("")
+        processTextBlocks(t, encryptedBlock, encryptedText + encryptedTextPortion)
       }
       case Nil => {
         encryptedText
@@ -51,7 +51,8 @@ class CBCMode(iv: Array[Int], key: String) {
     encryptedText
   }
 
-  def solution(): Unit = {
+  def solution(): String = {
     val encryptedText = Source.fromResource("10.txt").getLines.mkString("")
+    CBCMode(encryptedText, "YELLOW SUBMARINE")
   }
 }
