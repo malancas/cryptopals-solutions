@@ -6,6 +6,7 @@ import scala.io.Source
 import java.util.Base64
 
 import set1.AES128Matrix
+//import ECBMode
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 
@@ -25,65 +26,23 @@ object C7 {
   }
 
   // ECB implementation
-
-  def divideTextIntoBlocks(text: String): List[Array[Byte]] = {
-    // Assume block size is 16 bytes for now
-    text.getBytes.grouped(16).map(_.toArray).toList
-  }
-
-  def processTextBlocks(textBlocks: List[Array[Byte]], cipherBlock: Array[Int], encryptedText: String): String = {
-    textBlocks match {
-      case h :: t => {
-        // Process the first block
-        val encryptedBlock = encryptBlock(h, cipherBlock)
-        val encryptedTextPortion = encryptedBlock.map(_.toChar).mkString("")
-        processTextBlocks(t, encryptedBlock, encryptedText + encryptedTextPortion)
-      }
-      case Nil => {
-        encryptedText
-      }
-    }
-  }
-
-  def encryptBlock(textBlock: Array[Byte], cipherBlock: Array[Int]): Array[Int] = {
-    // XOR the text block with the previous ciphertext block
-    val xored = textBlock.zip(cipherBlock).map { case (x,y) =>  x ^ y }
-
-    // Encrypted the result
-    val keyArray = key.getBytes()
-    val encrypted = xored.zip(keyArray).map { case (x,y) => (x ^ y)}
-    encrypted
-  }
-
-  def ECBMode(plaintext: String, key: String): String = {
-    val textMatrix = new AES128Matrix(plaintext)
-    val keyMatrix = new AES128Matrix(key)
-
-    val textBlocks = divideTextIntoBlocks(plaintext)
-    // Begin with encrypting the first textblock with the IV
-    val initialCipherBlock = encryptBlock(textBlocks.head, IV)
-
-    // Now use the initial cipher block and encrypt the remaining text blocks
-    val encryptedText = processTextBlocks(textBlocks.tail, initialCipherBlock, key)
-    encryptedText
-  }
-
+  /*
   def solution(): String = {
     val encryptedText = Source.fromResource("7.txt").getLines.mkString("")
-    ECBMode(encryptedText, "YELLOW SUBMARINE")
+    val ecbMode = new ECBMode
+    ecbMode.doECB(encryptedText, "YELLOW SUBMARINE")
   }
   
   // AES-128 implementation
 
-  /*
-  -Each column of the encrypted text is xored with the corresponding row of the round key
-    - Convert text from single string representation into a matrix representation
-    - process each column
-  -The result column replaces the original encrypted column
-  -Repeat for all columns in the encrypted text
-  */
+  
+  // -Each column of the encrypted text is xored with the corresponding row of the round key
+  // - Convert text from single string representation into a matrix representation
+  // - process each column
+  // -The result column replaces the original encrypted column
+  // -Repeat for all columns in the encrypted text
 
-  def addRoundKey(encryptedTextBlock: DenseMatrix[String], roundKey: DenseMatrix[String]): DenseMatrix[String] = {
+  def addRoundKey(encryptedTextBlock: Array[Array[Byte]], roundKey: Array[Array[Byte]]): DenseMatrix[String] = {
     encryptedTextMatrix.zip(roundKeyMatrix)
     val newEncryptedMatrix = encryptedTextMatrix(::, *).map( dv => dv._1 ^ dv._2)
     newEncryptedMatrix
@@ -174,4 +133,5 @@ object C7 {
     val plaintext = decrypt(binaryCiphertext)
     println(plaintext)
   }
+  */
 }
