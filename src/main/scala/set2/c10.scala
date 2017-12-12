@@ -1,7 +1,7 @@
 package set2.c10
 
 import scala.io.Source
-//import BlockCipherMode // Something wrong with this import
+import lib1.BlockCipherMode // Something wrong with this import
 
 /*
 In CBC mode, each block of plaintext is XORed with the previous ciphertext block before being encrypted. 
@@ -11,8 +11,8 @@ To make each message unique, an initialization vector must be used in the first 
 
 object C10 {
   def solution: String = {
-    val cbcMode = new BlockCipherMode.CBCMode(encryptedText, "YELLOW SUBMARINE")
     val encryptedText = Source.fromResource("10.txt").getLines.mkString("")
-    cbcMode.doCBC
+    val cbcMode = new BlockCipherMode.CBCMode("0000", "YELLOW SUBMARINE")
+    cbcMode.doCBC(encryptedText)
   }
 }

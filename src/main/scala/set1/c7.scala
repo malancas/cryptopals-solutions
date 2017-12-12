@@ -5,8 +5,8 @@ import javax.crypto.Cipher
 import scala.io.Source
 import java.util.Base64
 
-import set1.AES128Matrix
-//import ECBMode
+import lib1.AES128Matrix
+import lib1.BlockCipherMode
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 

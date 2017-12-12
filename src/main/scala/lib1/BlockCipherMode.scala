@@ -1,6 +1,6 @@
-package BlockCipherMode
+package lib1.BlockCipherMode
 
-import set1.AES128Matrix
+import lib1.AES128Matrix
 
 trait BlockCipherMode {
   def divideTextIntoBlocks(text: String): List[List[Byte]] = {
@@ -15,8 +15,6 @@ class ECBMode extends BlockCipherMode {
     val keyMatrix = new AES128Matrix(key)
 
     val textBlocks = divideTextIntoBlocks(plaintext)
-    // Begin with encrypting the first textblock with the IV
-    val initialCipherBlock = encryptBlock(textBlocks.head, IV)
 
     // Now use the initial cipher block and encrypt the remaining text blocks
     val encryptedText = processTextBlocks(textBlocks.tail, initialCipherBlock, key)
@@ -81,7 +79,7 @@ class CBCMode(iv: String, keyInput: String) extends BlockCipherMode {
     }
   }
 
-  def doCBC(plaintext: String, key: String): String = {
+  def doCBC(plaintext: String): String = {
     val textBlocks = divideTextIntoBlocks(plaintext)
     // Begin with encrypting the first textblock with the IV
     val initialCipherBlock = encryptBlock(textBlocks.head, IV)
