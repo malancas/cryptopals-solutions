@@ -22,7 +22,7 @@ object C7 {
   def javaxSolution(): String = {
     val encryptedText = Source.fromResource("7.txt").getLines.mkString("")
     val key = "YELLOW SUBMARINE"
-    decrypt(encryptedText, key)
+    javaxDecrypt(encryptedText, key)
   }
 
   // ECB implementation

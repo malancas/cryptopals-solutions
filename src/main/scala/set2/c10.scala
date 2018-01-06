@@ -10,9 +10,9 @@ To make each message unique, an initialization vector must be used in the first 
 */
 
 object C10 {
-  def solution: String = {
+  def solution: Unit = {
     val encryptedText = Source.fromResource("10.txt").getLines.mkString("")
-    val cbcMode = new BlockCipherMode.CBCMode("0000", "YELLOW SUBMARINE")
-    cbcMode.doCBC(encryptedText)
+    //val cbcMode = new BlockCipherMode.CBCMode("0000", "YELLOW SUBMARINE")
+    //cbcMode.doCBC(encryptedText)
   }
 }
