@@ -1,8 +1,8 @@
-package lib1.AES128
+package lib1
 
 trait AES128 {}
 
-class AES128Impl {
+class AES128Impl extends AES128 {
   // Initialized s box
   val rijndaelSBox = Map(
     0x00 -> Map(0x00 -> 0x63, 0x01 -> 0x7c, 0x02 -> 0x77, 0x03 -> 0x7b, 0x04 -> 0xf2, 0x05 -> 0x6b,
