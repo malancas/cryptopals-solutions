@@ -55,7 +55,18 @@ class AES128Impl extends AES128 {
       0x0d -> 0x54, 0x0e -> 0xbb, 0x0f -> 0x16)
   )
 
-  def substituteWithHexToRijndaelBoxReplacement(i: Int, input: Int, result: Int): Int = {
+  def substitute1(input: Int): Int = {
+    val inverseInputBits = Integer.toBinaryString(input).toArray.map {x => if (x == '1') '0' else '1'}.mkString("")
+    println("reversed input bit string: " + inverseInputBits)
+
+    val inverseNum = Integer.parseInt(inverseInputBits,2)
+  
+    //substitute1_aux(0, inverseNum, 0)
+    //substitute1_aux(0, inverseNum, inverseNum)
+    substitute1_aux(0, input, 0)  
+  }
+
+  def substitute1_aux(i: Int, input: Int, result: Int): Int = {
     /*
     1. Let s (an 8-bit unsigned variable) be the input number.
     2. Let result be 0.
@@ -66,13 +77,64 @@ class AES128Impl extends AES128 {
     */
     if (i < 5) {
       // XOR result with s
-      val newResult = input ^ result
-      val newInput = input << 1
-      substituteWithHexToRijndaelBoxReplacement(i+1, newInput, newResult) 
+      //val newResult = input ^ result
+      val newInput = input ^ result
+
+      //val newInput = (((input & 0xff) << 1) | (input & 0xff) >>> (8 - 1))
+      val newResult = (((input & 0xff) << 1) | (input & 0xff) >>> (8 - 1))      
+      substitute1_aux(i+1, newInput, newResult) 
     }
     else {
       // Return result
-      result
+      result ^ 99
+    }
+  }
+
+  def substitute2(input: Int): Int = {
+    // Store the multiplicative inverse of the input number in two 8-bit unsigned temporary variables: s and x.
+    println("input bit string: " + Integer.toBinaryString(input))
+    
+    val inverseInputBits = Integer.toBinaryString(input).toArray.map {x => if (x == '1') '0' else '1'}.mkString("")
+    println("reversed input bit string: " + inverseInputBits)
+
+    val inverseNum = Integer.parseInt(inverseInputBits,2)
+    val s = inverseNum
+    val x = inverseNum
+
+    val newX = substitute2_aux(0, x, s)
+    newX ^ 99
+  }
+
+  def updateLowBit(s: Int): Int = {
+    // If the value of s had a high bit (eighth bit from the right) of one,
+    // make the low bit of s one; otherwise the low bit of s is zero.
+    val sBits = Integer.toBinaryString(s).toArray
+    println("sbits: " + sBits.mkString(""))
+    val length = sBits.length
+    if (length < 8 || sBits(0) == '0'){
+      Integer.parseInt((sBits.slice(0,length-1) ++ Array('0')).mkString(""), 2)
+    }
+    else {
+      Integer.parseInt((sBits.slice(0,length-1) ++ Array('1')).mkString(""), 2)      
+    }
+  }
+
+  def substitute2_aux(i: Int, x: Int, s: Int): Int = {
+    if (i == 4){
+      x
+    }
+    else {
+      println("s: " + s)
+      val rotatedS = (((s & 0xff) << 1) | (s & 0xff) >>> (8 - 1))
+      println("s: " + rotatedS)
+
+      val updatedSBits = updateLowBit(rotatedS)
+      println("updated s bits: " + Integer.toBinaryString(updatedSBits))
+
+      // Exclusive or the value of x with the value of s, storing the value in x
+      val xoredX = x ^ updatedSBits
+
+      substitute2_aux(i+1, xoredX, updatedSBits)
     }
   }
 }
