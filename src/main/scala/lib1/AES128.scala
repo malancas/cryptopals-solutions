@@ -2,14 +2,7 @@ package lib1
 
 trait AES128 {}
 
-object AES128Impl {
-  def apply(key: String, cipher: String) = new AES128Impl(keyArray, cipherState) {
-    val keyArray = key.split("").map(_.toInt)
-    val cipherState = cipher.split("").map(_.toInt)
-  }
-}
-
-class AES128Impl(keyArray: Array[Int], cipherState: Array[Int]) extends AES128 {
+class AES128Impl(key: String, cipherState: String) extends AES128 {
   // Initialized s box
   val rijndaelSBox = Array(
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
@@ -32,17 +25,13 @@ class AES128Impl(keyArray: Array[Int], cipherState: Array[Int]) extends AES128 {
   // Initialized rcon
   val rcon = Array(0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36)
 
-  val key = "YELLOW SUBMARINE"
-
-  val cipherState = Array[Int]
-
-  def createRoundKey: Array[Int] = {
-    rijndaelKeyScheduler(1, key)
+  def createRoundKey(keyArray: Array[Int]): Array[Int] = {
+    rijndaelKeyScheduler(1, keyArray)
   }
 
   def keySchedulerCore(input: Array[Int], i: Int): Array[Int] = {
     // Rotate the input word eight bits to the left
-    val rotated = input.slice(1) ++ input(0)
+    val rotated = input.slice(1, 16) ++ input(0)
 
     // Apply the S-Box on all four elements of the word
     val sBoxWord = rotated.map(rijndaelSBox(_))
@@ -56,7 +45,7 @@ class AES128Impl(keyArray: Array[Int], cipherState: Array[Int]) extends AES128 {
   def produce12BytesOfExpandedKey(i: Int, currKey: Array[Int]): Array[Int] = {
     if (i < 3){
       // Append the last four bytes of the current extended key to temp
-      temp = currKey.takeRight(4)
+      val temp = currKey.takeRight(4)
       // XOR t with the four-byte block n bytes before the new expanded key.
       // This becomes the next 4 bytes in the expanded key
       beginIt = currKey.length - 1 - 16 - 3
@@ -90,7 +79,23 @@ class AES128Impl(keyArray: Array[Int], cipherState: Array[Int]) extends AES128 {
     currCipherState.zipWithIndex.map { case (x, in) => rijndaelSBox(in) }
   }
 
+  def shiftRow(row: Array[Int], shift: Int): Array[Int] = {
+    // Split the array along the shift
+    val (before, after) = row.splitAt(shift)
+    after ++ before
+  }
+
+
+  def shiftRows(currCipherState: Array[Int]): Array[Int] = {
+    // Shift each nth row to the left n times.
+    // Ex. the 0th row is shifted 0 times, the 1st row is shifted 1 time, etc.
+    // Create array from row and process it
+    currCipherState.slice(0,4) ++ shiftRow(currCipherState.slice(4, 9), 1) ++ shiftRow(currCipherState.slice(9, 12), 2) ++ shiftRow(currCipherState.slice(12, 16), 3)
+  }
+
   def doAlgorithm: String = {
+        val keyArray = key.split("").map(_.toInt)
+    val cipherState = cipher.split("").map(_.toInt)
     // Step 1: KeyExpansions - create round keys from the cipher key using the Rijndael Key Scheduler
     // Each round requires a 128 bit round key
     val roundKey = createRoundKey
