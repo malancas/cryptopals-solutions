@@ -3,7 +3,7 @@ package lib1
 trait AES128 {}
 
 class AES128Impl(key: String, ciphertext: String) extends AES128 {
-  // Initialized s box
+   // Initialized s box
   val rijndaelSBox = Array(
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
     0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -24,6 +24,33 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
   )
   // Initialized rcon
   val rcon = Array(0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36)
+
+  def doAlgorithm: String = {
+    val keyArray = key.split("").map(_.toInt)
+    val cipherState = ciphertext.split("").map(_.toInt)
+    // Step 1: KeyExpansions - create round keys from the cipher key using the Rijndael Key Scheduler
+    // Each round requires a 128 bit round key
+    val roundKey = createRoundKey(keyArray)
+
+    // Step 2: Initial round - each byte is XORed with a block of the round key
+    val newCipherState = addRoundKey(cipherState, roundKey)
+
+    // Do 9 main rounds
+    doMainRounds(0, cipherState)
+
+    "filler"
+  }
+
+  def doMainRounds(i: Int, cipherState: Array[Int]): Array[Int] = {
+    // Substitute the ciphertext values for their s-box equivalent
+    val subbedCipher = subBytes(cipherState)
+
+    // Shift each row of the ciphertext
+    val shiftedCipher = shiftRows(subbedCipher)
+
+    // Mix columns
+    val mixedCipher = mixColumns(shiftedCipher)
+  }
 
   def createRoundKey(keyArray: Array[Int]): Array[Int] = {
     rijndaelKeyScheduler(1, keyArray)
@@ -132,16 +159,5 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
     val row3 = Array(newCol0(3), newCol1(3), newCol2(3), newCol3(3))  
   
     row0 ++ row1 ++ row2 ++ row3
-  }
-
-  def doAlgorithm: String = {
-    val keyArray = key.split("").map(_.toInt)
-    val cipherState = ciphertext.split("").map(_.toInt)
-    // Step 1: KeyExpansions - create round keys from the cipher key using the Rijndael Key Scheduler
-    // Each round requires a 128 bit round key
-    //val roundKey = createRoundKey
-
-    // Step 2: Initial round - each byte is XORed with a block of the round key
-    "filler"
   }
 }
