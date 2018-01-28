@@ -2,7 +2,7 @@ package lib1
 
 trait AES128 {}
 
-class AES128Impl(key: String, cipherState: String) extends AES128 {
+class AES128Impl(key: String, ciphertext: String) extends AES128 {
   // Initialized s box
   val rijndaelSBox = Array(
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
@@ -31,7 +31,7 @@ class AES128Impl(key: String, cipherState: String) extends AES128 {
 
   def keySchedulerCore(input: Array[Int], i: Int): Array[Int] = {
     // Rotate the input word eight bits to the left
-    val rotated = input.slice(1, 16) ++ input(0)
+    val rotated = input.slice(1, 16) ++ Array(input(0))
 
     // Apply the S-Box on all four elements of the word
     val sBoxWord = rotated.map(rijndaelSBox(_))
@@ -39,7 +39,7 @@ class AES128Impl(key: String, cipherState: String) extends AES128 {
     // XOR the first byte of the word with the rcon output when using i
     val newFirstByte = rcon(i) ^ sBoxWord(0)
 
-    Array(newFirstByte) ++ sBoxWord.slice(1)
+    Array(newFirstByte) ++ sBoxWord.slice(1, sBoxWord.length)
   }
 
   def produce12BytesOfExpandedKey(i: Int, currKey: Array[Int]): Array[Int] = {
@@ -48,8 +48,8 @@ class AES128Impl(key: String, cipherState: String) extends AES128 {
       val temp = currKey.takeRight(4)
       // XOR t with the four-byte block n bytes before the new expanded key.
       // This becomes the next 4 bytes in the expanded key
-      beginIt = currKey.length - 1 - 16 - 3
-      endIt = currKey.length - 1 - 16
+      val beginIt = currKey.length - 1 - 16 - 3
+      val endIt = currKey.length - 1 - 16
       val nextFourBytes = temp.zip(currKey.slice(beginIt, endIt)).map{ case (x, y) => x ^ y }
 
       produce12BytesOfExpandedKey(i+1, currKey ++ nextFourBytes)
@@ -62,10 +62,13 @@ class AES128Impl(key: String, cipherState: String) extends AES128 {
       // Create the next four bytes of the expanded key
       val temp = currKey.takeRight(4)
       val currExpandedKey = keySchedulerCore(temp, rconIteration)
-      val newRconIteration = rconIteration + 1
 
       // Do the following three times to create the next twelve bytes of expanded key
-      produce12BytesOfExpandedKey(0, currExpandedKey)
+      val newBytes = produce12BytesOfExpandedKey(0, currExpandedKey)
+      rijndaelKeyScheduler(rconIteration+1, currKey ++ newBytes)
+    }
+    else {
+      currKey
     }
   }
 
@@ -85,7 +88,6 @@ class AES128Impl(key: String, cipherState: String) extends AES128 {
     after ++ before
   }
 
-
   def shiftRows(currCipherState: Array[Int]): Array[Int] = {
     // Shift each nth row to the left n times.
     // Ex. the 0th row is shifted 0 times, the 1st row is shifted 1 time, etc.
@@ -93,14 +95,53 @@ class AES128Impl(key: String, cipherState: String) extends AES128 {
     currCipherState.slice(0,4) ++ shiftRow(currCipherState.slice(4, 9), 1) ++ shiftRow(currCipherState.slice(9, 12), 2) ++ shiftRow(currCipherState.slice(12, 16), 3)
   }
 
+  def makeBArray(i: Int, cipherStateColumn: Array[Int], bArray: Array[Int]): Array[Int] = {
+    if (i < cipherStateColumn.length){
+      val newEl = (cipherStateColumn(i) << 1) ^ (0x1b & cipherStateColumn(i) >> 7)
+      makeBArray(i+1, cipherStateColumn, bArray ++ Array(newEl))
+    }
+    else {
+      bArray
+    }
+  }
+
+  def mixColumn(cipherStateColumn: Array[Int]): Array[Int] = {
+    val a = cipherStateColumn
+    val b = makeBArray(0, cipherStateColumn, Array.empty)
+    val new0 = b(0) ^ a(3) ^ a(2) ^ b(1) ^ a(1)
+    val new1 = b(1) ^ a(0) ^ a(3) ^ b(2) ^ a(2)
+    val new2 = b(2) ^ a(1) ^ a(0) ^ b(3) ^ a(3)
+    val new3 = b(3) ^ a(2) ^ a(1) ^ b(0) ^ a(0)
+    Array(new0, new1, new2, new3)
+  }
+
+  def mixColumns(currCipherState: Array[Int]): Array[Int] = {
+    val column0 = Array(currCipherState(0), currCipherState(4), currCipherState(9), currCipherState(12))
+    val column1 = Array(currCipherState(1), currCipherState(5), currCipherState(10), currCipherState(13))
+    val column2 = Array(currCipherState(2), currCipherState(6), currCipherState(11), currCipherState(14))
+    val column3 = Array(currCipherState(3), currCipherState(7), currCipherState(12), currCipherState(15))    
+  
+    val newCol0 = mixColumn(column0)
+    val newCol1 = mixColumn(column1)
+    val newCol2 = mixColumn(column2)
+    val newCol3 = mixColumn(column3)
+
+    val row0 = Array(newCol0(0), newCol1(0), newCol2(0), newCol3(0))
+    val row1 = Array(newCol0(1), newCol1(1), newCol2(1), newCol3(1))
+    val row2 = Array(newCol0(2), newCol1(2), newCol2(2), newCol3(2))
+    val row3 = Array(newCol0(3), newCol1(3), newCol2(3), newCol3(3))  
+  
+    row0 ++ row1 ++ row2 ++ row3
+  }
+
   def doAlgorithm: String = {
-        val keyArray = key.split("").map(_.toInt)
-    val cipherState = cipher.split("").map(_.toInt)
+    val keyArray = key.split("").map(_.toInt)
+    val cipherState = ciphertext.split("").map(_.toInt)
     // Step 1: KeyExpansions - create round keys from the cipher key using the Rijndael Key Scheduler
     // Each round requires a 128 bit round key
-    val roundKey = createRoundKey
+    //val roundKey = createRoundKey
 
     // Step 2: Initial round - each byte is XORed with a block of the round key
-    val cipherState = addRoundKey()
+    "filler"
   }
 }
