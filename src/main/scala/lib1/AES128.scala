@@ -50,6 +50,7 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
 
     // Mix columns
     val mixedCipher = mixColumns(shiftedCipher)
+    Array(1)
   }
 
   def createRoundKey(keyArray: Array[Int]): Array[Int] = {
