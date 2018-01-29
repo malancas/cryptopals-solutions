@@ -14,9 +14,8 @@ class AES128Test extends FunSpec with Matchers with BeforeAndAfterEach with Mock
   describe("shiftRows") {
     it ("should return the correctShiftedState") {
       val cipherState = Array.range(0,16)
-      val correctShiftedState = Array(0,1,2,3,5,6,7,4,10,11,8,9,13,14,15,12)
+      val correctShiftedState = Array(0,1,2,3,5,6,7,4,10,11,8,9,15,12,13,14)
       aes128Impl.shiftRows(cipherState) shouldBe correctShiftedState
     }
   }
 }
-

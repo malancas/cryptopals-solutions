@@ -120,7 +120,7 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
     // Shift each nth row to the left n times.
     // Ex. the 0th row is shifted 0 times, the 1st row is shifted 1 time, etc.
     // Create array from row and process it
-    currCipherState.slice(0,4) ++ shiftRow(currCipherState.slice(4, 9), 1) ++ shiftRow(currCipherState.slice(9, 12), 2) ++ shiftRow(currCipherState.slice(12, 16), 3)
+    currCipherState.slice(0,4) ++ shiftRow(currCipherState.slice(4, 8), 1) ++ shiftRow(currCipherState.slice(8, 12), 2) ++ shiftRow(currCipherState.slice(12, 16), 3)
   }
 
   def makeBArray(i: Int, cipherStateColumn: Array[Int], bArray: Array[Int]): Array[Int] = {
