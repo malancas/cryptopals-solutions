@@ -1,4 +1,4 @@
-package lib1
+package lib1.AES128Matrix
 
 class AES128Matrix(text: String) {
   // Convert the text in a 4X4 2D array representation

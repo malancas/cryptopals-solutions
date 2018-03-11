@@ -6,7 +6,7 @@ import scala.io.Source
 import java.util.Base64
 
 import lib1.AES128Matrix
-import lib1.BlockCipherMode
+import lib1.BlockCipherMode.ECBMode
 
 // http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf
 
@@ -26,13 +26,13 @@ object C7 {
   }
 
   // ECB implementation
-  /*
   def solution(): String = {
     val encryptedText = Source.fromResource("7.txt").getLines.mkString("")
-    val ecbMode = new ECBMode
+    val ecbMode = new ECBMode(encryptedText)
     ecbMode.doECB(encryptedText, "YELLOW SUBMARINE")
   }
   
+  /*
   // AES-128 implementation
 
   

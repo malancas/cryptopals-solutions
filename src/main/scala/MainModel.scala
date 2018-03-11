@@ -60,7 +60,7 @@ object MainModel {
     println("Challenge 6 passed")
 
     // Challenge 7
-    //println(C7.solution())
+    println(C7.solution())
     println("Challenge 7 passed")
 
     // Challenge 8
