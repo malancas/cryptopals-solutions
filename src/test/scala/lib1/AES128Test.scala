@@ -34,11 +34,41 @@ class AES128Test extends FunSpec with Matchers with BeforeAndAfterEach with Mock
     }
   }
 
+  describe("shiftRow") {
+    it ("should shift the row by one element") {
+      val row = Array.range(0,4)
+      val shiftedRow = Array(1,2,3,0)
+      aes128Impl.shiftRow(row, 1) shouldBe shiftedRow
+    }
+
+    it ("should shift the row by two elements") {
+      val row = Array.range(0,4)
+      val shiftedRow = Array(2,3,0,1)
+      aes128Impl.shiftRow(row, 2) shouldBe shiftedRow
+    }
+
+    it ("should shift the row by three elements") {
+      val row = Array.range(0,4)
+      val shiftedRow = Array(3,0,1,2)
+      aes128Impl.shiftRow(row, 3) shouldBe shiftedRow
+    }
+
+    it ("should shift the row by four elements") {
+      val row = Array.range(0,4)
+      aes128Impl.shiftRow(row, 4) shouldBe row
+    }
+
+    it ("should shift the row by zero elements") {
+      val row = Array.range(0,4)
+      aes128Impl.shiftRow(row, 0) shouldBe row
+    }
+  }
+
   describe("shiftRows") {
     it ("should return shifted 0-16 array") {
-      val row = Array.range(0,16)
-      val shiftedRow = Array(0,1,2,3,5,6,7,4,10,11,8,9,15,12,13,14)
-      aes128Impl.shiftRows(row) shouldBe shiftedRow
+      val rows = Array.range(0,16)
+      val shiftedRows = Array(0,1,2,3,5,6,7,4,10,11,8,9,15,12,13,14)
+      aes128Impl.shiftRows(rows) shouldBe shiftedRows
     }
   }
 }
