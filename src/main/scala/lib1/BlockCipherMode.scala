@@ -1,6 +1,7 @@
 package lib1.BlockCipherMode
 
 trait BlockCipherMode {
+  val key: String
   def divideTextIntoBlocks(text: String): List[List[Int]] = {
     // Assume block size is 16 Ints for now
     text.grouped(4).toList.transpose.map(_.map(_.toInt))
@@ -31,11 +32,13 @@ trait BlockCipherMode {
   }
 }
 
+/*
 object BlockCipherMode {
   def apply(keyIn: String): BlockCipherMode = new BlockCipherMode(keyIn)
 }
+*/
 
-class ECBMode(keyInput: String) extends BlockCipherMode {
+class ECBMode(val key: String) extends BlockCipherMode {
   //val key: String = keyInput
   
   def doECB(plaintext: String, key: String): String = {
@@ -66,7 +69,7 @@ class ECBMode(keyInput: String) extends BlockCipherMode {
   //}
 }
 
-class CBCMode(iv: String, keyInput: String) extends BlockCipherMode {
+class CBCMode(iv: String, val key: String) extends BlockCipherMode {
   val IV: List[Int] = iv.toList.map(_.toInt)
   //val key: String = keyInput
 
