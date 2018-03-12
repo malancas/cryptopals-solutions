@@ -32,15 +32,7 @@ trait BlockCipherMode {
   }
 }
 
-/*
-object BlockCipherMode {
-  def apply(keyIn: String): BlockCipherMode = new BlockCipherMode(keyIn)
-}
-*/
-
 class ECBMode(val key: String) extends BlockCipherMode {
-  //val key: String = keyInput
-  
   def doECB(plaintext: String, key: String): String = {
     val initialCipherBlock: List[Int] = List(0x01)
 
@@ -50,40 +42,10 @@ class ECBMode(val key: String) extends BlockCipherMode {
     val encryptedText = processTextBlocks(textBlocks.tail, initialCipherBlock, key)
     encryptedText
   }
-
-  /*
-  def encryptBlock(textBlock: List[Int], cipherBlock: List[Int]): List[Int] = {
-    // XOR the text block with the previous ciphertext block
-    val xored = textBlock.zip(cipherBlock).map { case (x,y) =>  x ^ y }
-
-    // Encrypted the result
-    val keyArray = key.getBytes.map(_.toInt)
-    val encrypted = xored.zip(keyArray).map { case (x,y) => (x ^ y)}
-    encrypted
-  }
-  */
-
-  //override def divideTextIntoBlocks(text: String): Array[List[Int]] = {
-    // Assume block size is 16 Ints for now
-  //  text.grouped(4).toList.transpose.toArray.map(_.map(_.toInt))
-  //}
 }
 
 class CBCMode(iv: String, val key: String) extends BlockCipherMode {
   val IV: List[Int] = iv.toList.map(_.toInt)
-  //val key: String = keyInput
-
-  /*
-  def encryptBlock(textBlock: List[Int], cipherBlock: List[Int]): List[Int] = {
-    // XOR the text block with the previous ciphertext block
-    val xored = textBlock.zip(cipherBlock).map { case (x,y) =>  x ^ y }
-
-    // Encrypted the result
-    val keyArray = key.getBytes.map(_.toInt)
-    val encrypted = xored.zip(keyArray).map { case (x,y) => (x ^ y)}
-    encrypted
-  }
-  */
 
   def doCBC(plaintext: String): String = {
     val textBlocks = divideTextIntoBlocks(plaintext)
