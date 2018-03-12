@@ -18,4 +18,19 @@ class AES128Test extends FunSpec with Matchers with BeforeAndAfterEach with Mock
       aes128Impl.shiftRows(cipherState) shouldBe correctShiftedState
     }
   }
+
+  describe("addRoundKey") {
+    it ("should return a zero array") {
+      val column = Array.range(0,16)
+      val roundKey = Array.range(0,16)
+      val zeroArray = Array.fill(16)(0)
+      aes128Impl.addRoundKey(column, roundKey) shouldBe zeroArray
+    }
+
+    it ("should return the identity array") {
+      val column = Array.range(0,16)
+      val roundKey = Array.fill(16)(0)
+      aes128Impl.addRoundKey(column, roundKey) shouldBe column
+    }
+  }
 }
