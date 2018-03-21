@@ -71,4 +71,8 @@ class AES128Test extends FunSpec with Matchers with BeforeAndAfterEach with Mock
       aes128Impl.shiftRows(rows) shouldBe shiftedRows
     }
   }
+
+  describe("mixColumn") {
+    
+  }
 }

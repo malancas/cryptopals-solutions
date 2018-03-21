@@ -100,9 +100,9 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
     }
   }
 
+  // Each element of the cipher state is XORed with the round key's equivalent element
+  // These elements form the new cipher state
   def addRoundKey(currCipherState: Array[Int], roundKey: Array[Int]): Array[Int] = {
-    // Each element of the cipher state is XORed with the round key's equivalent element
-    // These elements form the new cipher state
     currCipherState.zip(roundKey).map { case (x, y) => x ^ y}
   }
 
@@ -116,10 +116,10 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
     after ++ before
   }
 
+  // Shift each nth row to the left n times.
+  // Ex. the 0th row is shifted 0 times, the 1st row is shifted 1 time, etc.
+  // Create array from row and process it
   def shiftRows(currCipherState: Array[Int]): Array[Int] = {
-    // Shift each nth row to the left n times.
-    // Ex. the 0th row is shifted 0 times, the 1st row is shifted 1 time, etc.
-    // Create array from row and process it
     currCipherState.slice(0,4) ++ shiftRow(currCipherState.slice(4, 8), 1) ++ shiftRow(currCipherState.slice(8, 12), 2) ++ shiftRow(currCipherState.slice(12, 16), 3)
   }
 
@@ -133,9 +133,11 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
     }
   }
 
-  def mixColumn(cipherStateColumn: Array[Int]): Array[Int] = {
-    val a = cipherStateColumn
-    val b = makeBArray(0, cipherStateColumn, Array.empty)
+  // The column's four hex number elements are modulo multiplied
+  // in Rijndael's Galois Field by a given matrix.
+  // This replaces the original column
+  def mixColumn(a: Array[Int]): Array[Int] = {
+    val b = makeBArray(0, a, Array.empty)
     val new0 = b(0) ^ a(3) ^ a(2) ^ b(1) ^ a(1)
     val new1 = b(1) ^ a(0) ^ a(3) ^ b(2) ^ a(2)
     val new2 = b(2) ^ a(1) ^ a(0) ^ b(3) ^ a(3)
