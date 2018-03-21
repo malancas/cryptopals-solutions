@@ -107,7 +107,7 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
   }
 
   def subBytes(currCipherState: Array[Int]): Array[Int] = {
-    currCipherState.zipWithIndex.map { case (x, in) => rijndaelSBox(in) }
+    currCipherState.map { x => rijndaelSBox(x) }
   }
 
   def shiftRow(row: Array[Int], shift: Int): Array[Int] = {
@@ -121,28 +121,6 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
   // Create array from row and process it
   def shiftRows(currCipherState: Array[Int]): Array[Int] = {
     currCipherState.slice(0,4) ++ shiftRow(currCipherState.slice(4, 8), 1) ++ shiftRow(currCipherState.slice(8, 12), 2) ++ shiftRow(currCipherState.slice(12, 16), 3)
-  }
-
-  def makeBArray(i: Int, cipherStateColumn: Array[Int], bArray: Array[Int]): Array[Int] = {
-    if (i < cipherStateColumn.length){
-      val newEl = (cipherStateColumn(i) << 1) ^ (0x1b & cipherStateColumn(i) >> 7)
-      makeBArray(i+1, cipherStateColumn, bArray ++ Array(newEl))
-    }
-    else {
-      bArray
-    }
-  }
-
-  // The column's four hex number elements are modulo multiplied
-  // in Rijndael's Galois Field by a given matrix.
-  // This replaces the original column
-  def mixColumn(a: Array[Int]): Array[Int] = {
-    val b = makeBArray(0, a, Array.empty)
-    val new0 = b(0) ^ a(3) ^ a(2) ^ b(1) ^ a(1)
-    val new1 = b(1) ^ a(0) ^ a(3) ^ b(2) ^ a(2)
-    val new2 = b(2) ^ a(1) ^ a(0) ^ b(3) ^ a(3)
-    val new3 = b(3) ^ a(2) ^ a(1) ^ b(0) ^ a(0)
-    Array(new0, new1, new2, new3)
   }
 
   def mixColumns(currCipherState: Array[Int]): Array[Int] = {
@@ -162,5 +140,27 @@ class AES128Impl(key: String, ciphertext: String) extends AES128 {
     val row3 = Array(newCol0(3), newCol1(3), newCol2(3), newCol3(3))  
   
     row0 ++ row1 ++ row2 ++ row3
+  }
+
+  // The column's four hex number elements are modulo multiplied
+  // in Rijndael's Galois Field by a given matrix.
+  // This replaces the original column
+  def mixColumn(a: Array[Int]): Array[Int] = {
+    val b = makeBArray(0, a, Array.empty)
+    val new0 = b(0) ^ a(3) ^ a(2) ^ b(1) ^ a(1)
+    val new1 = b(1) ^ a(0) ^ a(3) ^ b(2) ^ a(2)
+    val new2 = b(2) ^ a(1) ^ a(0) ^ b(3) ^ a(3)
+    val new3 = b(3) ^ a(2) ^ a(1) ^ b(0) ^ a(0)
+    Array(new0, new1, new2, new3)
+  }
+
+  def makeBArray(i: Int, cipherStateColumn: Array[Int], bArray: Array[Int]): Array[Int] = {
+    if (i < cipherStateColumn.length){
+      val newEl = (cipherStateColumn(i) << 1) ^ (0x1b & cipherStateColumn(i) >> 7)
+      makeBArray(i+1, cipherStateColumn, bArray ++ Array(newEl))
+    }
+    else {
+      bArray
+    }
   }
 }
