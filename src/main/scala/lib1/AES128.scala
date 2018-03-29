@@ -37,7 +37,8 @@ class AES128Impl(key: String, ciphertext: String, rijndaelKeyScheduler: Rijndael
     val mainRoundsCipherState = doMainRounds(0, cipherState, roundKeys.slice(1, roundKeys.length))
 
     // Do final round
-    doFinalRound(mainRoundsCipherState, roundKeys.last)
+    val finalCipher = doFinalRound(mainRoundsCipherState, roundKeys.last)
+    finalCipher.map(_.toChar).mkString
   }
 
   def doMainRounds(i: Int, cipherState: Array[Int], roundKeys: Array[Array[Int]]): Array[Int] = {
@@ -59,6 +60,7 @@ class AES128Impl(key: String, ciphertext: String, rijndaelKeyScheduler: Rijndael
     val subbedCipher = subBytes(cipherState)
     val shiftedCipher = shiftRows(subbedCipher)
     val addedCipher = addRoundKey(shiftedCipher, roundKey)
+    addedCipher
   }
 
   // Each element of the cipher state is XORed with the round key's equivalent element
