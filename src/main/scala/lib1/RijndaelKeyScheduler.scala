@@ -4,7 +4,7 @@ class RijndaelKeyScheduler {
   // Initialized rcon
   val rcon = Array(0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36)
   
-  def rijndaelKeyScheduler(rconIteration: Int, currKey: Array[Int]): Array[Int] = {
+  def rijndaelKeyScheduler(rconIteration: Int, currKey: Array[Int], roundKeys: Array[Array[Int]]): Array[Int] = {
     if (currKey.length < 176) {
       // Create the next four bytes of the expanded key
       val temp = currKey.takeRight(4)
@@ -14,9 +14,7 @@ class RijndaelKeyScheduler {
       val newBytes = produce12BytesOfExpandedKey(0, currExpandedKey)
       rijndaelKeyScheduler(rconIteration+1, currKey ++ newBytes)
     }
-    else {
-      currKey
-    }
+    else currKey
   }
 
   def keySchedulerCore(i: Int, input: Array[Int]): Array[Int] = {
@@ -44,6 +42,6 @@ class RijndaelKeyScheduler {
 
       produce12BytesOfExpandedKey(i+1, currKey ++ nextFourBytes)
     }
-    currKey
+    else currKey
   }
 }
