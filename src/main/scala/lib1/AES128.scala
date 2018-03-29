@@ -28,19 +28,19 @@ class AES128Impl(key: String, ciphertext: String, rijndaelKeyScheduler: Rijndael
     val cipherState = ciphertext.split("").map(_.toInt)
     // Step 1: KeyExpansions - create round keys from the cipher key using the Rijndael Key Scheduler
     // Each round requires a 128 bit round key
-    val roundKey = createRoundKey(keyArray)
+    val roundKeys = rijndaelKeyScheduler.makeRoundKeys(0, keyArray, rijndaelSBox)
 
     // Step 2: Initial round - each byte is XORed with a block of the round key
-    val newCipherState = addRoundKey(cipherState, roundKey)
+    val newCipherState = addRoundKey(cipherState, roundKeys(0))
 
     // Do 9 main rounds
-    val newCipherState = doMainRounds(0, cipherState, roundKey)
+    val mainRoundsCipherState = doMainRounds(0, cipherState, roundKeys.slice(1, roundKeys.length))
 
     // Do final round
-    doFinalRound(newCipherState)
+    doFinalRound(mainRoundsCipherState, roundKeys.last)
   }
 
-  def doMainRounds(i: Int, cipherState: Array[Int]): Array[Int] = {
+  def doMainRounds(i: Int, cipherState: Array[Int], roundKeys: Array[Array[Int]]): Array[Int] = {
     if (i < 9) {
       // Substitute the ciphertext values for their s-box equivalent
       val subbedCipher = subBytes(cipherState)
@@ -49,20 +49,16 @@ class AES128Impl(key: String, ciphertext: String, rijndaelKeyScheduler: Rijndael
       // Mix columns
       val mixedCipher = mixColumns(shiftedCipher)
       // Do addRoundKey
-      val newCipherState = addRoundKey(mixedCipher, roundKey)
+      val newCipherState = addRoundKey(mixedCipher, roundKeys(i))
       
-      doMainRounds(i+1, newCipherState)
+      doMainRounds(i+1, newCipherState, roundKeys)
     } else cipherState
   }
 
-  def doFinalRound(cipher: Array[Int]): Array[Int] = {
-    val subbedCipher = subBytes(newCipherState)
+  def doFinalRound(cipherState: Array[Int], roundKey: Array[Int]): Array[Int] = {
+    val subbedCipher = subBytes(cipherState)
     val shiftedCipher = shiftRows(subbedCipher)
-    val addedCipher = addRoundKey(shiftedCipher)
-  }
-
-  def createRoundKey(keyArray: Array[Int]): Array[Int] = {
-    rijndaelKeyScheduler(1, keyArray)
+    val addedCipher = addRoundKey(shiftedCipher, roundKey)
   }
 
   // Each element of the cipher state is XORed with the round key's equivalent element

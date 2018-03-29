@@ -1,20 +1,21 @@
 package lib1
 
-class RijndaelKeyScheduler {
+class RijndaelKeyScheduler(rijndaelSBox: Array[Int]) {
   // Initialized rcon
   val rcon = Array(0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36)
   
-  def rijndaelKeyScheduler(rconIteration: Int, currKey: Array[Int], roundKeys: Array[Array[Int]]): Array[Int] = {
+  def makeRoundKeys(rconIteration: Int, currKey: Array[Int], rijndaelSBox: Array[Int]): Array[Array[Int]] = {
     if (currKey.length < 176) {
       // Create the next four bytes of the expanded key
       val temp = currKey.takeRight(4)
-      val currExpandedKey = keySchedulerCore(temp, rconIteration)
+      val currExpandedKey = keySchedulerCore(rconIteration, temp)
 
       // Do the following three times to create the next twelve bytes of expanded key
       val newBytes = produce12BytesOfExpandedKey(0, currExpandedKey)
-      rijndaelKeyScheduler(rconIteration+1, currKey ++ newBytes)
+      makeRoundKeys(rconIteration+1, currKey ++ newBytes, rijndaelSBox)
     }
-    else currKey
+    // Create keys and return them
+    else currKey.grouped(16).toArray
   }
 
   def keySchedulerCore(i: Int, input: Array[Int]): Array[Int] = {
