@@ -1,4 +1,4 @@
-package lib1
+package lib1.RijndaelKeyScheduler
 
 class RijndaelKeyScheduler(rijndaelSBox: Array[Int]) {
   // Initialized rcon

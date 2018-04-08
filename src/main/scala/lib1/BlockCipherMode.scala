@@ -32,7 +32,7 @@ trait BlockCipherMode {
   }
 }
 
-class ECBMode(val key: String) extends BlockCipherMode {
+class ECBMode[Method <: EncryptionMethod](val key: String, encryptionMethod: Method) extends BlockCipherMode {
   def doECB(plaintext: String, key: String): String = {
     val initialCipherBlock: List[Int] = List(0x01)
 
