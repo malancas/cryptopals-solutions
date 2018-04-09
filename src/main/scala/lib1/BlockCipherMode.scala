@@ -1,5 +1,7 @@
 package lib1.BlockCipherMode
 
+import lib1.EncryptionMethod
+
 trait BlockCipherMode {
   val key: String
   def divideTextIntoBlocks(text: String): List[List[Int]] = {
@@ -32,7 +34,7 @@ trait BlockCipherMode {
   }
 }
 
-class ECBMode[Method <: EncryptionMethod](val key: String, encryptionMethod: Method) extends BlockCipherMode {
+class ECBMode[Method <: EncryptionMethod.EncryptionMethod](val key: String, encryptionMethod: Method) extends BlockCipherMode {
   def doECB(plaintext: String, key: String): String = {
     val initialCipherBlock: List[Int] = List(0x01)
 
