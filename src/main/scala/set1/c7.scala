@@ -28,7 +28,7 @@ object C7 {
   // ECB implementation
   def solution(): String = {
     val encryptedText = Source.fromResource("7.txt").getLines.mkString("")
-    val ecbMode = new ECBMode(encryptedText)
+    val ecbMode = new ECBMode(encryptedText, new AES128(encryptedText))
     ecbMode.doECB(encryptedText, "YELLOW SUBMARINE")
   }
   

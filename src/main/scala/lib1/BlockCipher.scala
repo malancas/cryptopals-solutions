@@ -1,10 +1,12 @@
-package lib1.EncryptionMethod
+package lib1.BlockCipher
 
 import lib1.RijndaelKeyScheduler
 
-trait EncryptionMethod {}
+trait BlockCipher {
+  def doAlgorithm(key: String, ciphertext: String): String
+}
 
-class AES128(key: String, ciphertext: String, rijndaelKeyScheduler: RijndaelKeyScheduler.RijndaelKeyScheduler) extends EncryptionMethod {
+class AES128 extends EncryptionMethod {
    // Initialized s box
   val rijndaelSBox = Array(
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
@@ -25,7 +27,9 @@ class AES128(key: String, ciphertext: String, rijndaelKeyScheduler: RijndaelKeyS
     0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
   )
 
-  def doAlgorithm: String = {
+  val rijndaelKeyScheduler = new RijndaelKeyScheduler
+
+  override def doAlgorithm(key: String, ciphertext: String): String = {
     val keyArray = key.split("").map(_.toInt)
     val cipherState = ciphertext.split("").map(_.toInt)
     // Step 1: KeyExpansions - create round keys from the cipher key using the Rijndael Key Scheduler

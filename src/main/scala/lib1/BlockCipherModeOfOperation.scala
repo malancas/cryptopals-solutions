@@ -1,8 +1,8 @@
-package lib1.BlockCipherMode
+package lib1.BlockCipherModeOfOperation
 
-import lib1.EncryptionMethod
+import lib1.BlockCipher
 
-trait BlockCipherMode {
+trait BlockCipherModeOfOperation {
   val key: String
   def divideTextIntoBlocks(text: String): List[List[Int]] = {
     // Assume block size is 16 Ints for now
@@ -35,13 +35,27 @@ trait BlockCipherMode {
 }
 
 class ECBMode[Method <: EncryptionMethod.EncryptionMethod](val key: String, encryptionMethod: Method) extends BlockCipherMode {
+  override def processTextBlocks(textBlocks: List[List[Int]], cipherBlock: List[Int], encryptionMethod: Method): String = {
+    textBlocks match {
+      case h :: t => {
+        // Process the first block
+        val encryptedBlock = encryptionMethod.doAlgorithm(h, cipherBlock)
+        val encryptedTextPortion = encryptedBlock.map(_.toChar).mkString("")
+        processTextBlocks(t, encryptedBlock, encryptedText + encryptedTextPortion)
+      }
+      case Nil => {
+        encryptedText
+      }
+    }
+  }
+  
   def doECB(plaintext: String, key: String): String = {
     val initialCipherBlock: List[Int] = List(0x01)
 
     val textBlocks: List[List[Int]] = divideTextIntoBlocks(plaintext)
 
     // Now use the initial cipher block and encrypt the remaining text blocks
-    val encryptedText = processTextBlocks(textBlocks.tail, initialCipherBlock, key)
+    val encryptedText = processTextBlocks(textBlocks.tail, initialCipherBlock, key, encryptionMethod)
     encryptedText
   }
 }
